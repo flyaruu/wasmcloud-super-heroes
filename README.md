@@ -25,11 +25,12 @@ docker compose up
 ```bash
 cd services/rest-heroes
 wash build
+cd ../..
 ```
 
 ### Push the wasm file to the internal OCI registry:
 ```bash
-wash push --insecure localhost:5001/flyaruu/rest-heroes:0.1.2 /Users/flyaruu/git/wasmcloud-super-heroes/services/rest-heroes/build/rest_heroes_s.wasm
+wash push --insecure localhost:5001/flyaruu/rest-heroes:0.1.2 services/rest-heroes/build/rest_heroes_s.wasm
 ```
 
 ### Install the Postgres 'driver' (Capability provider)
@@ -53,29 +54,9 @@ wash config put default-postgres \
   POSTGRES_TLS_REQUIRED=false
 
 ```
-## Running with wasmtime
-
-You must have wasmtime >=25.0.0 for this to work. Make sure to follow the build step above first.
-
+### Call the service using cUrl
 ```bash
-wasmtime serve -Scommon ./build/dog_fetcher_s.wasm
+curl -v localhost:8000/api/heroes
 ```
+... will return a list of all heroes in JSON
 
-## Running with wasmCloud
-
-Ensuring you've built your component with `wash build`, you can launch wasmCloud and deploy the full
-hello world application with the following commands. Once the application reports as **Deployed** in
-the application list, you can use `curl` to send a request to the running HTTP server.
-
-```shell
-wash up -d
-wash app deploy ./wadm.yaml
-wash app get
-curl http://127.0.0.1:8000
-```
-
-## Adding Capabilities
-
-To learn how to extend this example with additional capabilities, see the [Adding
-Capabilities](https://wasmcloud.com/docs/tour/adding-capabilities?lang=rust) section of the
-wasmCloud documentation.
