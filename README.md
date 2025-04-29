@@ -3,6 +3,17 @@
 This is a simple Rust Wasm example that fetches a URL to a random dog picture and returns the
 response. Its purpose is to show how you can use `wasi:http/outgoing-handler` in a component. 
 
+```console
+wash config put default-postgres \
+    POSTGRES_HOST=heroes-db \
+    POSTGRES_PORT=5432 \
+    POSTGRES_USERNAME=superman \
+    POSTGRES_PASSWORD=superman \
+    POSTGRES_DATABASE=heroes_database \
+    POSTGRES_TLS_REQUIRED=false
+```
+
+
 ## Prerequisites
 
 - `cargo` 1.75

@@ -1,0 +1,6 @@
+package wasmcloud:rest-heroes;
+
+world rest-heroes-world {
+  import wasmcloud:postgres/query@0.1.1-draft;
+  import wasi:logging/logging@0.1.0-draft;
+}

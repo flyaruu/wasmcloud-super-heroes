@@ -25,12 +25,14 @@ services:
       WASMCLOUD_NATS_HOST: nats
       WASMCLOUD_NATS_PORT: 4222
       WASMCLOUD_LATTICE: default
+      WASMCLOUD_ALLOW_FILE_LOAD: "true"
+      WASMCLOUD_OCI_ALLOWED_INSECURE: "registry:5000"
       RUST_LOG: debug
     ports:
       - "4000:4000"
       - "8000:8000"
     volumes:
-      - ./wasmcloud_data:/root/.wasmcloud
+      - ${PWD}/wasmcloud_data:/root/.wasmcloud
 
   wadm:
     image: ghcr.io/wasmcloud/wadm:latest
@@ -41,7 +43,7 @@ services:
     environment:
       WADM_NATS_SERVER: nats:4222
       WADM_JS_DOMAIN: wasmcloud
-      RUST_LOG: debug
+      RUST_LOG: info
     ports:
       - "8081:8080"
 
@@ -80,3 +82,18 @@ services:
       MARIADB_SKIP_TEST_DB: yes
     volumes:
       - ${PWD}/database/locations-db/init:/docker-entrypoint-initdb.d
+  registry:
+    image: registry:2
+    restart: always
+    ports:
+      - "5001:5000"
+    environment:
+      # allows you to delete blobs via the HTTP API if you need to clean up
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    volumes:
+      # persists your registry data on the host
+      - ${PWD}/registry_data:/var/lib/registry
+  ubuntu:
+    image: ubuntu
+    restart: on-failure
+    command: ["sleep","infinity"]

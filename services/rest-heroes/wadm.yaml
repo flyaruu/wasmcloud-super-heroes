@@ -2,24 +2,16 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: dog-fetcher
+  name: rest-heroes
   annotations:
-    version: v0.0.1
+    version: v0.0.2
     description: 'HTTP hello world demo in Rust, showing use of the server and client providers'
-    wasmcloud.dev/authors: wasmCloud team
-    wasmcloud.dev/source-url: https://github.com/wasmCloud/wasmCloud/blob/main/examples/rust/components/dog-fetcher/wadm.yaml
-    wasmcloud.dev/readme-md-url: https://github.com/wasmCloud/wasmCloud/blob/main/examples/rust/components/dog-fetcher/README.md
-    wasmcloud.dev/homepage: https://github.com/wasmCloud/wasmCloud/tree/main/examples/rust/components/dog-fetcher
-    wasmcloud.dev/categories: |
-      http,outgoing-http,http-server,rust,example
 spec:
   components:
     - name: http-component
       type: component
       properties:
-        # To use the locally compiled code in this folder, use the line below instead after running `wash build`:
-        # image: file://./build/dog_fetcher_s.wasm
-        image: ghcr.io/wasmcloud/components/dog-fetcher-rust:0.1.1
+        image: registry:5000/flyaruu/rest-heroes:0.1.2
       traits:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
@@ -31,10 +23,23 @@ spec:
         - type: link
           properties:
             target:
-              name: httpclient
-            namespace: wasi
-            package: http
-            interfaces: [outgoing-handler]
+              name: sqldb-postgres
+              config:
+                - name: default-postgres
+            namespace: wasmcloud
+            package: postgres
+            interfaces: [query]
+            source:
+              config:
+                - name: default-postgres
+                  # properties:
+                  #   connection_string: "postgres://superman:superman@heroes-db:5432/heroes_database"
+                  #   pool_size: 10
+                  #   max_lifetime: 30
+                  #   max_idle_time: 10
+                  #   min_idle_time: 5
+                  #   max_open_conns: 100
+                  #   max_idle_conns: 50
 
     # Add a capability provider that enables HTTP access
     - name: httpserver
@@ -70,15 +75,17 @@ spec:
                   properties:
                     address: 0.0.0.0:8000
 
-    - name: httpclient
+    - name: sqldb-postgres
       type: capability
       properties:
-        image: ghcr.io/wasmcloud/http-client:0.13.1
-        ## To configure OTEL integration for this provider specifically, uncomment the lines below
-        # config:
-        #   - name: otel
-        #     properties:
-        #       otel_exporter_otlp_endpoint: "http://all-in-one:4318"
-        #       otel_exporter_otlp_traces_endpoint: "http://traces-backend/v1/traces"
-        #       otel_exporter_otlp_metrics_endpoint: "http://metrics-backend/v1/metrics"
-        #       otel_exporter_otlp_logs_endpoint: "http://logs-backend/v1/logs"
+        image: ghcr.io/wasmcloud/sqldb-postgres:0.10.0
+        config:
+          - name: default-postgres
+            # properties:
+            #   connection_string: "postgres://superman:superman@heroes-db:5432/heroes_database"
+            #   pool_size: 10
+            #   max_lifetime: 30
+            #   max_idle_time: 10
+            #   min_idle_time: 5
+            #   max_open_conns: 100
+            #   max_idle_conns: 50
