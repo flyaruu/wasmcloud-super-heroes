@@ -92,8 +92,4 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
       # persists your registry data on the host
-      - ${PWD}/registry_data:/var/lib/registry
-  ubuntu:
-    image: ubuntu
-    restart: on-failure
-    command: ["sleep","infinity"]
+      - ${PWD}/registry_data:/var/lib/registry_data
