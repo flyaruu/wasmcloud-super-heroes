@@ -1,0 +1,9 @@
+package superheroes:types;
+// thing
+world superhero {
+  import wasmcloud:postgres/query@0.1.1-draft;
+  import wasi:logging/logging@0.1.0-draft;
+  import wasi:http/outgoing-handler@0.2.2;
+  import wasi:http/incoming-handler@0.2.2;
+  export wasi:http/incoming-handler@0.2.2;
+}

@@ -1,0 +1,10 @@
+[package]
+name = "bindings"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wit-bindgen = { workspace = true }
+
+[build-dependencies]
+wit-bindgen = { workspace = true }

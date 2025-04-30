@@ -1,8 +1,7 @@
 use std::str::from_utf8;
 
+use bindings::api::wasmcloud::postgres::{query::PgValue, types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
-
-use crate::bindings::wasmcloud::postgres::types::{PgValue, ResultRowEntry};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
