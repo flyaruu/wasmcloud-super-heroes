@@ -7,9 +7,9 @@ name = "wasi:http"
 registry = "wasi.dev"
 
 [[packages.versions]]
-requirement = "=0.2.2"
-version = "0.2.2"
-digest = "sha256:a1f129cdf1fde55ec2d4ae8d998c39a7e5cf7544a8bd84a831054ac0d2ac64dd"
+requirement = "=0.2.4"
+version = "0.2.4"
+digest = "sha256:b89804889d9afeb9c02b5a1c2c030279113716687f5a8b0254909a330deddc5f"
 
 [[packages]]
 name = "wasi:logging"

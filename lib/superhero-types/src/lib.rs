@@ -1,5 +1,6 @@
-use bindings::api::wasi::http::{outgoing_handler, types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, ResponseOutparam, Scheme}};
+use bindings::api::wasi::http::incoming_handler::ResponseOutparam;
 use serde::{de::DeserializeOwned, Serialize};
+use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, Scheme}};
 
 pub mod fights;
 pub mod heroes;

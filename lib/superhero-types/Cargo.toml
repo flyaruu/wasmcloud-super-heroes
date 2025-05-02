@@ -11,4 +11,4 @@ serde_json = { workspace = true}
 uuid = { workspace = true}
 wit-bindgen = { workspace = true}
 bindings = { path = "../bindings" }
-# wasi = "0.13.2"
+wasi = { workspace = true }

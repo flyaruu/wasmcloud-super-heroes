@@ -51,6 +51,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 name = "bindings"
 version = "0.1.0"
 dependencies = [
+ "wasi",
  "wit-bindgen",
 ]
 
@@ -578,6 +579,7 @@ dependencies = [
  "serde",
  "serde_json",
  "superhero-types",
+ "wasi",
 ]
 
 [[package]]
@@ -588,6 +590,7 @@ dependencies = [
  "serde",
  "serde_json",
  "superhero-types",
+ "wasi",
 ]
 
 [[package]]
@@ -688,6 +691,7 @@ dependencies = [
  "serde",
  "serde_json",
  "uuid",
+ "wasi",
  "wit-bindgen",
 ]
 

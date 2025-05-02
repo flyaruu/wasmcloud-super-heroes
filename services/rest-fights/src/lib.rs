@@ -1,26 +1,28 @@
 use std::io::{Read as _, Write as _};
 
-use bindings::api::{exports::wasi::http::incoming_handler::Guest, wasi::http::{outgoing_handler, types::{Fields, IncomingBody, IncomingRequest, OutgoingBody, OutgoingResponse, ResponseOutparam, Scheme}}};
-
+use bindings::api::{export, exports::wasi::http::incoming_handler::Guest};
+use wasi::{http::types::*};
 
 #[derive(serde::Deserialize)]
 struct DogResponse {
     message: String,
 }
 
+export!(DogFetcher with_types_in bindings::api);
+
 struct DogFetcher;
 
 impl Guest for DogFetcher {
     fn handle(_request: IncomingRequest, response_out: ResponseOutparam) {
         // Build a request to dog.ceo which returns a URL at which we can find a doggo
-        let req = outgoing_handler::OutgoingRequest::new(Fields::new());
+        let req = wasi::http::outgoing_handler::OutgoingRequest::new(Fields::new());
         req.set_scheme(Some(&Scheme::Https)).unwrap();
         req.set_authority(Some("dog.ceo")).unwrap();
         req.set_path_with_query(Some("/api/breeds/image/random"))
             .unwrap();
 
         // Perform the API call to dog.ceo, expecting a URL to come back as the response body
-        let dog_picture_url = match outgoing_handler::handle(req, None) {
+        let dog_picture_url = match wasi::http::outgoing_handler::handle(req, None) {
             Ok(resp) => {
                 resp.subscribe().block();
                 let response = resp
@@ -42,7 +44,7 @@ impl Guest for DogFetcher {
                             .expect("failed to read value from HTTP request response stream");
                         buf
                     };
-                    let _trailers = IncomingBody::finish(response_body);
+                    let _trailers = wasi::http::types::IncomingBody::finish(response_body);
                     let dog_response: DogResponse = serde_json::from_slice(&body).unwrap();
                     dog_response.message
                 } else {

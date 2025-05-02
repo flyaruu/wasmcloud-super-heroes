@@ -13,7 +13,7 @@
 //     export!(HeroFetcher);
 // }
 
-use bindings::api::{exports::wasi::http::incoming_handler::Guest, wasi::http::types::ResponseOutparam, wasmcloud::postgres::query::{query, PgValue}};
+use bindings::api::{exports::wasi::http::incoming_handler::Guest, wasi::http::incoming_handler::{IncomingRequest, ResponseOutparam}, wasmcloud::postgres::query::{query, PgValue}};
 // use bindings::{exports::wasi::http::incoming_handler::Guest, wasi::http::types::{IncomingRequest, ResponseOutparam}};
 // use bindings::{exports::wasi::http::incoming_handler::{Guest, IncomingRequest, ResponseOutparam}, wasi::http::types::{Fields, OutgoingBody, OutgoingResponse}};
 use serde::Serialize;
@@ -24,7 +24,7 @@ bindings::api::export!(HeroFetcher with_types_in bindings::api);
 // bindings::api::export_component!(HeroFetcher);
 struct HeroFetcher;
 impl Guest for HeroFetcher {
-    fn handle(request: bindings::api::wasi::http::types::IncomingRequest, response_out: ResponseOutparam) {
+    fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
 
         if let Some(path) = request.path_with_query() {
             if path.starts_with("/api/heroes/random_hero") {

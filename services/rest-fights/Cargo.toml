@@ -11,4 +11,5 @@ serde = { workspace = true}
 serde_json = { workspace = true }
 bindings = { path = "../../lib/bindings" }
 superhero-types = { path = "../../lib/superhero-types" }
+wasi = { workspace = true }
 

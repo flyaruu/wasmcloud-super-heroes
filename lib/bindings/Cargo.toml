@@ -5,6 +5,5 @@ edition = "2021"
 
 [dependencies]
 wit-bindgen = { workspace = true }
+wasi = { workspace = true }
 
-[build-dependencies]
-wit-bindgen = { workspace = true }
