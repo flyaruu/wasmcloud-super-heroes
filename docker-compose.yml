@@ -32,9 +32,10 @@ services:
       WASMCLOUD_LATTICE: default
       WASMCLOUD_ALLOW_FILE_LOAD: "true"
       WASMCLOUD_OCI_ALLOWED_INSECURE: "registry:5000"
-      RUST_LOG: debug
-      # WASMCLOUD_LOG_LEVEL: debug
+      RUST_LOG: info
+      WASMCLOUD_LOG_LEVEL: info
       # WASMCLOUD_LOGS_ENABLED: true
+      # Request received
     ports:
       - "4000:4000"
       - "8000-8079:8000-8079"

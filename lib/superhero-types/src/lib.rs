@@ -1,4 +1,4 @@
-use bindings::api::wasi::http::incoming_handler::ResponseOutparam;
+use bindings::api::wasi::{http::incoming_handler::ResponseOutparam, logging::logging::{log, Level}};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, Scheme}};
 
@@ -45,6 +45,7 @@ pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D,String>
     req.set_path_with_query(Some(path))
         .unwrap();
 
+    log(Level::Info, "request", &format!("Creating outgoing request2: {:?}", req));
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
             resp.subscribe().block();
@@ -62,15 +63,9 @@ pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D,String>
                     let mut stream = response_body
                         .stream()
                         .expect("failed to get HTTP request response stream");
-
-                    loop {
-                        // pick a chunk size
-                        let chunk = stream.read(2048).unwrap();    // or `.blocking_read(...)`
-                        if chunk.is_empty() {
-                            break;
-                        }
-                        buf.extend(chunk);
-                    }
+                    stream
+                        .read_to_end(&mut buf)
+                        .expect("failed to read value from HTTP request response stream");
                     buf
                 };
                 let _trailers = IncomingBody::finish(response_body);
@@ -110,15 +105,9 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>,String> {
                     let mut stream = response_body
                         .stream()
                         .expect("failed to get HTTP request response stream");
-
-                    loop {
-                        // pick a chunk size
-                        let chunk = stream.read(2048).unwrap();    // or `.blocking_read(...)`
-                        if chunk.is_empty() {
-                            break;
-                        }
-                        buf.extend(chunk);
-                    }
+                    stream
+                        .read_to_end(&mut buf)
+                        .expect("failed to read value from HTTP request response stream");
                     buf
                 };
                 let _trailers = IncomingBody::finish(response_body);

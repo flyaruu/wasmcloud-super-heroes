@@ -35,6 +35,12 @@ spec:
             namespace: wasi
             package: http
             interfaces: [outgoing-handler]
+        - type: link
+          properties:
+            target: http-component
+            namespace: wasi
+            package: logging
+            interfaces: [log]            
 
     # Add a capability provider that enables HTTP access
     - name: httpserver
