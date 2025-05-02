@@ -24,5 +24,5 @@ impl Guest for FightService {
 }
 
 fn get_random_hero() -> Result<SqlHero, String> {
-    superhero_types::get_item("wasmcloud:8001", "/api/heroes/random_hero")
+    Ok(superhero_types::get_item::<SqlHero>("wasmcloud:8001", "/api/heroes/random_hero")?)
 }

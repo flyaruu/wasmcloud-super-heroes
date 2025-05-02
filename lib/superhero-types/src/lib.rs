@@ -1,4 +1,4 @@
-use bindings::api::wasi::http::incoming_handler::ResponseOutparam;
+use bindings::api::wasi::{http::incoming_handler::ResponseOutparam, logging::logging::{log, Level}};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{
     outgoing_handler,
@@ -10,7 +10,7 @@ pub mod heroes;
 pub mod location;
 pub mod villains;
 
-use std::io::Read;
+use std::{io::Read, str::from_utf8};
 
 pub fn write_status_message(response_out: ResponseOutparam, message: String, status_code: u16) {
     let response = OutgoingResponse::new(Fields::new());
@@ -43,15 +43,18 @@ pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: 
 
 pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D, String> {
     let data = get_bytes(host, path)?;
-    serde_json::from_slice(&data).unwrap()
+    serde_json::from_slice(&data)
+        .map_err(|e| format!("Failed to parse response: {}", e))
 }
 
 pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
     let req = OutgoingRequest::new(Fields::new());
     req.set_scheme(Some(&Scheme::Http)).unwrap();
     req.set_authority(Some(host)).unwrap();
-    req.set_path_with_query(Some(path)).unwrap();
+    req.set_path_with_query(Some(path))
+        .unwrap();
 
+    log(Level::Info, "request", &format!("Creating outgoing request2: {:?}", req));
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
             resp.subscribe().block();
@@ -77,12 +80,12 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
                 let _trailers = IncomingBody::finish(response_body);
                 Ok(body)
             } else {
-                Err(format!(
-                    "HTTP request failed with status code {}",
-                    response.status()
-                ))
+                Err(format!("HTTP request failed with status code {}", response.status()))
             }
         }
-        Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
+        Err(e) => {
+            Err(format!("Got error when trying to fetch dog: {}", e))
+        }
     }
+
 }
