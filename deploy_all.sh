@@ -3,6 +3,9 @@ set -e
 cd services/rest-heroes
 ./deploy.sh
 cd ../..
+cd services/rest-villains
+./deploy.sh
+cd ../..
 cd services/rest-locations
 ./deploy.sh
 cd ../..

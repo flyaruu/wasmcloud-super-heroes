@@ -605,6 +605,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rest-villains"
+version = "0.1.1"
+dependencies = [
+ "bindings",
+ "serde",
+ "serde_json",
+ "superhero-types",
+ "wasi",
+]
+
+[[package]]
 name = "rustversion"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"

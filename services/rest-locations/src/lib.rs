@@ -5,9 +5,9 @@ use bindings::api::{
 };
 use superhero_types::{location::SqlLocation, write_output, write_status_message};
 
-bindings::api::export!(HeroFetcher with_types_in bindings::api);
-struct HeroFetcher;
-impl Guest for HeroFetcher {
+bindings::api::export!(LocationFetcher with_types_in bindings::api);
+struct LocationFetcher;
+impl Guest for LocationFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
         if let Some(path) = request.path_with_query() {
             if path.starts_with("/api/locations/random_location") {

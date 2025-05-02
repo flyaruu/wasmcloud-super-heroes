@@ -1,13 +1,13 @@
 #!/bin/sh
 set -e
-export SERVICE_NAME=rest-locations
-export BINARY_NAME=rest_locations
-wash config put locations-postgres \
-  POSTGRES_HOST=locations-db \
+export SERVICE_NAME=rest-villains
+export BINARY_NAME=rest_villains
+wash config put villains-postgres \
+  POSTGRES_HOST=villains-db \
   POSTGRES_PORT=5432 \
   POSTGRES_USERNAME=superman \
   POSTGRES_PASSWORD=superman \
-  POSTGRES_DATABASE=locations_database \
+  POSTGRES_DATABASE=villains_database \
   POSTGRES_TLS_REQUIRED=false
 echo "Deploying $SERVICE_NAME"
 wash build
