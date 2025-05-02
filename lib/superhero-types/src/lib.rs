@@ -1,6 +1,9 @@
 use bindings::api::wasi::http::incoming_handler::ResponseOutparam;
 use serde::{de::DeserializeOwned, Serialize};
-use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, Scheme}};
+use wasi::http::{
+    outgoing_handler,
+    types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, Scheme},
+};
 
 pub mod fights;
 pub mod heroes;
@@ -17,13 +20,14 @@ pub fn write_status_message(response_out: ResponseOutparam, message: String, sta
     ResponseOutparam::set(response_out, Ok(response));
     write_stream.write(message.as_bytes()).unwrap();
     drop(write_stream);
-    OutgoingBody::finish(response_body, None)
-        .expect("failed to finish response body");
+    OutgoingBody::finish(response_body, None).expect("failed to finish response body");
 }
 pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: S) {
-    let headers = Fields::from_list(&[
-        ("content-type".to_string(), "application/json".as_bytes().to_vec()),
-    ]).unwrap();
+    let headers = Fields::from_list(&[(
+        "content-type".to_string(),
+        "application/json".as_bytes().to_vec(),
+    )])
+    .unwrap();
     let response = OutgoingResponse::new(headers);
     response.set_status_code(200).unwrap();
     // Write the headers and then write the body
@@ -34,21 +38,19 @@ pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: 
     let val = serde_json::to_string_pretty(&serializable).unwrap();
     write_stream.write(val.as_bytes()).unwrap();
     drop(write_stream);
-    OutgoingBody::finish(response_body, None)
-        .expect("failed to finish response body");
+    OutgoingBody::finish(response_body, None).expect("failed to finish response body");
 }
 
-pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D,String> {
+pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D, String> {
     let data = get_bytes(host, path)?;
     serde_json::from_slice(&data).unwrap()
 }
 
-pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>,String> {
+pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
     let req = OutgoingRequest::new(Fields::new());
     req.set_scheme(Some(&Scheme::Http)).unwrap();
     req.set_authority(Some(host)).unwrap();
-    req.set_path_with_query(Some(path))
-        .unwrap();
+    req.set_path_with_query(Some(path)).unwrap();
 
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
@@ -75,11 +77,12 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>,String> {
                 let _trailers = IncomingBody::finish(response_body);
                 Ok(body)
             } else {
-                Err(format!("HTTP request failed with status code {}", response.status()))
+                Err(format!(
+                    "HTTP request failed with status code {}",
+                    response.status()
+                ))
             }
         }
-        Err(e) => {
-            Err(format!("Got error when trying to fetch dog: {}", e))
-        }
+        Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
     }
 }

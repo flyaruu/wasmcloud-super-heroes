@@ -30,27 +30,24 @@ fn get_optional_string_from_value(value: &PgValue) -> Option<String> {
     }
 }
 
-
 fn get_i32_from_value(value: &PgValue) -> i32 {
     match value {
         PgValue::Int(i) => *i,
         PgValue::BigInt(i) => *i as i32,
         PgValue::Int4(i) => *i as i32,
         PgValue::Int8(i) => *i as i32,
-        _ => panic!("Invalid type: {:?}",value),
+        _ => panic!("Invalid type: {:?}", value),
     }
 }
 
 fn get_i64_from_value(value: &PgValue) -> i64 {
-    
     match value {
         PgValue::BigInt(i) => *i,
         PgValue::Int(i) => *i as i64,
         PgValue::Int8(i) => *i as i64,
-        _ => panic!("Invalid type: {:?}",value),
+        _ => panic!("Invalid type: {:?}", value),
     }
 }
-
 
 impl From<&Vec<ResultRowEntry>> for SqlHero {
     fn from(row: &Vec<ResultRowEntry>) -> Self {
@@ -70,7 +67,6 @@ impl From<&Vec<ResultRowEntry>> for SqlHero {
                 "picture" => picture = get_string_from_value(&entry.value),
                 "powers" => powers = get_string_from_value(&entry.value),
                 _ => panic!("unknown column: {} {:?}", entry.column_name, entry.value),
-
             }
         }
 

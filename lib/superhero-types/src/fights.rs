@@ -3,11 +3,7 @@ use std::time::SystemTime;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    heroes::SqlHero,
-    location::SqlLocation,
-    villains::SqlVillain,
-};
+use crate::{heroes::SqlHero, location::SqlLocation, villains::SqlVillain};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
