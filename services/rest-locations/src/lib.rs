@@ -46,7 +46,11 @@ fn location(id: i32, response_out: ResponseOutparam) {
 }
 
 fn all_locations(response_out: ResponseOutparam) {
-    let rows = query("select name,description,picture,location_type::text as location_type from locations", &[]).unwrap();
+    let rows = query(
+        "select name,description,picture,location_type::text as location_type from locations",
+        &[],
+    )
+    .unwrap();
     let rows: Vec<SqlLocation> = rows.iter().map(|row| row.into()).collect();
     write_output(response_out, rows);
 }

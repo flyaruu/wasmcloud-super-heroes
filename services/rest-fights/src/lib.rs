@@ -3,7 +3,13 @@ use bindings::api::{
     exports::wasi::http::incoming_handler::Guest,
     wasi::logging::logging::{log, Level},
 };
-use superhero_types::{fights::{FightResult, Winner}, heroes::SqlHero, location::{self, SqlLocation}, villains::SqlVillain, write_output};
+use superhero_types::{
+    fights::{FightResult, Winner},
+    heroes::SqlHero,
+    location::SqlLocation,
+    villains::SqlVillain,
+    write_output,
+};
 use wasi::http::types::*;
 
 struct FightService;
@@ -17,7 +23,6 @@ impl Guest for FightService {
         let hero = get_random_hero().unwrap();
         let villain = get_random_villain().unwrap();
         let location = get_random_locations().unwrap();
-        
 
         let hero_name = format!("Hero found: {}", hero.name);
         log(Level::Info, "request", &hero_name);
@@ -28,12 +33,12 @@ impl Guest for FightService {
 }
 
 fn get_random_hero() -> Result<SqlHero, String> {
-    Ok(superhero_types::get_item::<SqlHero>("wasmcloud:8001", "/api/heroes/random_hero")?)
+    superhero_types::get_item::<SqlHero>("wasmcloud:8001", "/api/heroes/random_hero")
 }
 
 fn get_random_locations() -> Result<SqlLocation, String> {
-    Ok(superhero_types::get_item::<SqlLocation>("wasmcloud:8003", "/api/locations/random_location")?)
+    superhero_types::get_item::<SqlLocation>("wasmcloud:8003", "/api/locations/random_location")
 }
 fn get_random_villain() -> Result<SqlVillain, String> {
-    Ok(superhero_types::get_item::<SqlVillain>("wasmcloud:8002", "/api/villains/random_villain")?)
+    superhero_types::get_item::<SqlVillain>("wasmcloud:8002", "/api/villains/random_villain")
 }

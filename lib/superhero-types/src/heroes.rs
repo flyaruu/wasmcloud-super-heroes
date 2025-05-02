@@ -1,7 +1,9 @@
 use bindings::api::wasmcloud::postgres::types::ResultRowEntry;
 use serde::{Deserialize, Serialize};
 
-use crate::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value};
+use crate::{
+    get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value,
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -13,8 +15,6 @@ pub struct SqlHero {
     pub picture: String,
     pub powers: String,
 }
-
-
 
 impl From<&Vec<ResultRowEntry>> for SqlHero {
     fn from(row: &Vec<ResultRowEntry>) -> Self {

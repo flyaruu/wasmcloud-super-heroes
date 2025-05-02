@@ -1,7 +1,9 @@
 use bindings::api::wasmcloud::postgres::types::ResultRowEntry;
 use serde::{Deserialize, Serialize};
 
-use crate::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value};
+use crate::{
+    get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value,
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -14,8 +16,6 @@ pub struct SqlVillain {
     pub picture: String,
     pub powers: String,
 }
-
-
 
 impl From<&Vec<ResultRowEntry>> for SqlVillain {
     fn from(row: &Vec<ResultRowEntry>) -> Self {
@@ -36,7 +36,7 @@ impl From<&Vec<ResultRowEntry>> for SqlVillain {
                 "powers" => powers = get_string_from_value(&entry.value),
                 _ => panic!("unknown column: {} {:?}", entry.column_name, entry.value),
             }
-        }   
+        }
 
         SqlVillain {
             id,

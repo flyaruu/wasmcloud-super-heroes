@@ -1,4 +1,10 @@
-use bindings::api::{wasi::{http::incoming_handler::ResponseOutparam, logging::logging::{log, Level}}, wasmcloud::postgres::query::PgValue};
+use bindings::api::{
+    wasi::{
+        http::incoming_handler::ResponseOutparam,
+        logging::logging::{log, Level},
+    },
+    wasmcloud::postgres::query::PgValue,
+};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{
     outgoing_handler,
@@ -43,18 +49,20 @@ pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: 
 
 pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D, String> {
     let data = get_bytes(host, path)?;
-    serde_json::from_slice(&data)
-        .map_err(|e| format!("Failed to parse response: {}", e))
+    serde_json::from_slice(&data).map_err(|e| format!("Failed to parse response: {}", e))
 }
 
 pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
     let req = OutgoingRequest::new(Fields::new());
     req.set_scheme(Some(&Scheme::Http)).unwrap();
     req.set_authority(Some(host)).unwrap();
-    req.set_path_with_query(Some(path))
-        .unwrap();
+    req.set_path_with_query(Some(path)).unwrap();
 
-    log(Level::Info, "request", &format!("Creating outgoing request2: {:?}", req));
+    log(
+        Level::Info,
+        "request",
+        &format!("Creating outgoing request2: {:?}", req),
+    );
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
             resp.subscribe().block();
@@ -80,14 +88,14 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
                 let _trailers = IncomingBody::finish(response_body);
                 Ok(body)
             } else {
-                Err(format!("HTTP request failed with status code {}", response.status()))
+                Err(format!(
+                    "HTTP request failed with status code {}",
+                    response.status()
+                ))
             }
         }
-        Err(e) => {
-            Err(format!("Got error when trying to fetch dog: {}", e))
-        }
+        Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
     }
-
 }
 
 pub fn get_string_from_value(value: &PgValue) -> String {
@@ -110,7 +118,7 @@ pub fn get_i32_from_value(value: &PgValue) -> i32 {
     match value {
         PgValue::Int(i) => *i,
         PgValue::BigInt(i) => *i as i32,
-        PgValue::Int4(i) => { *i },
+        PgValue::Int4(i) => *i,
         PgValue::Int8(i) => *i as i32,
         _ => panic!("Invalid type: {:?}", value),
     }
@@ -120,7 +128,7 @@ pub fn get_i64_from_value(value: &PgValue) -> i64 {
     match value {
         PgValue::BigInt(i) => *i,
         PgValue::Int(i) => *i as i64,
-        PgValue::Int8(i) => { *i },
+        PgValue::Int8(i) => *i,
         _ => panic!("Invalid type: {:?}", value),
     }
 }
