@@ -60,8 +60,8 @@ impl FightResult {
             Winner::Villains => villain.name.clone(),
         };
         let winner_level = match winner {
-            Winner::Heroes => hero.level.clone(),
-            Winner::Villains => villain.level.clone(),
+            Winner::Heroes => hero.level,
+            Winner::Villains => villain.level,
         };
         let winner_powers = match winner {
             Winner::Heroes => hero.powers.clone(),

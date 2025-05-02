@@ -29,7 +29,6 @@ impl Guest for HeroFetcher {
                 return;
             }
             write_status_message(response_out, format!("Path not found: {}", path), 404);
-            return;
         }
     }
 }
