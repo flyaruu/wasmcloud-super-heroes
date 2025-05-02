@@ -20,7 +20,7 @@ use serde::Serialize;
 use superhero_types::{heroes::SqlHero, write_output, write_status_message};
 // bindings::api::export!(HeroFetcher);
 
-bindings::api::export!(HeroFetcher);
+bindings::api::export!(HeroFetcher with_types_in bindings::api);
 // bindings::api::export_component!(HeroFetcher);
 struct HeroFetcher;
 impl Guest for HeroFetcher {

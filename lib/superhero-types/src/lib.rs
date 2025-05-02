@@ -70,15 +70,58 @@ pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D,String>
                         }
                         buf.extend(chunk);
                     }
-
-                    // stream
-                    //     .read_to_end(&mut buf)
-                    //     .expect("failed to read value from HTTP request response stream");
                     buf
                 };
                 let _trailers = IncomingBody::finish(response_body);
                 let deserialized_response: D = serde_json::from_slice(&body).unwrap();
                 Ok(deserialized_response)
+            } else {
+                Err(format!("HTTP request failed with status code {}", response.status()))
+            }
+        }
+        Err(e) => {
+            Err(format!("Got error when trying to fetch dog: {}", e))
+        }
+    }
+}
+
+pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>,String> {
+    let req = OutgoingRequest::new(Fields::new());
+    req.set_scheme(Some(&Scheme::Http)).unwrap();
+    req.set_authority(Some(host)).unwrap();
+    req.set_path_with_query(Some(path))
+        .unwrap();
+
+    match outgoing_handler::handle(req, None) {
+        Ok(resp) => {
+            resp.subscribe().block();
+            let response = resp
+                .get()
+                .expect("HTTP request response missing")
+                .expect("HTTP request response requested more than once")
+                .expect("HTTP request failed");
+            if response.status() == 200 {
+                let response_body = response
+                    .consume()
+                    .expect("failed to get incoming request body");
+                let body = {
+                    let mut buf = vec![];
+                    let mut stream = response_body
+                        .stream()
+                        .expect("failed to get HTTP request response stream");
+
+                    loop {
+                        // pick a chunk size
+                        let chunk = stream.read(2048).unwrap();    // or `.blocking_read(...)`
+                        if chunk.is_empty() {
+                            break;
+                        }
+                        buf.extend(chunk);
+                    }
+                    buf
+                };
+                let _trailers = IncomingBody::finish(response_body);
+                Ok(body)
             } else {
                 Err(format!("HTTP request failed with status code {}", response.status()))
             }
