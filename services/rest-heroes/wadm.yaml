@@ -31,7 +31,7 @@ spec:
             interfaces: [query]
             source:
               config:
-                - name: default-postgres
+                - name: heroes-postgres
                   # properties:
                   #   connection_string: "postgres://superman:superman@heroes-db:5432/heroes_database"
                   #   pool_size: 10

@@ -5,3 +5,5 @@ target/
 build/
 registry_data/
 
+# Cardamon db
+cardamon.db

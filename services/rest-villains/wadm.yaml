@@ -29,17 +29,6 @@ spec:
             namespace: wasmcloud
             package: postgres
             interfaces: [query]
-            source:
-              config:
-                - name: default-postgres
-                  # properties:
-                  #   connection_string: "postgres://superman:superman@villains-db:5432/villains_database"
-                  #   pool_size: 10
-                  #   max_lifetime: 30
-                  #   max_idle_time: 10
-                  #   min_idle_time: 5
-                  #   max_open_conns: 100
-                  #   max_idle_conns: 50
 
     # Add a capability provider that enables HTTP access
     - name: httpserver

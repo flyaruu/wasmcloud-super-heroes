@@ -27,9 +27,7 @@ spec:
             package: postgres
             interfaces:
               - query
-            source:
-              config:
-                - name: default-postgres
+
     - name: httpserver
       type: capability
       properties:
