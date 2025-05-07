@@ -66,7 +66,7 @@ jobs:
           docker compose exec builder cargo build --target wasm32-wasip2 --release
           docker compose exec builder pwd 
           docker compose exec builder ls -la 
-          docker compose exec builder cd services && ./build.sh 
+          docker compose exec builder 'cd services && ./build.sh'
     #   - name: Cardamon All
     #     run: |
     #       export LOG_FILTER=info
