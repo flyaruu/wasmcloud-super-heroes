@@ -63,7 +63,7 @@ jobs:
           sleep 10
       - name: Run k6 tests
         run: |
-          cargo build --target wasm32-wasip2 --release
+          docker compose exec builder cargo build --target wasm32-wasip2 --release
           docker compose exec builder pwd 
           docker compose exec builder ls -la 
           docker compose exec builder /build/services/build.sh 
