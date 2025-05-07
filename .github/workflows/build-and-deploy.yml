@@ -51,6 +51,8 @@ jobs:
 
       - name: Build docker compose
         run: |
+          ls -la
+          echo "Current directory: $(PWD)"
           docker compose build
           docker compose pull
       - name: Run docker compose
