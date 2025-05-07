@@ -48,7 +48,6 @@ jobs:
             && tar xvfz cardamon.tgz \
             && mv cardamon /usr/local/bin/cardamon \
             && rm -rf cardamon.tgz cardamon/
-
       - name: Build docker compose
         run: |
           ls -la
@@ -79,7 +78,7 @@ jobs:
 
       - name: Cardamon All
         run: |
-          export LOG_FILTER=info
+          export LOG_FILTER=warn
           cardamon run all
       - name: Cardamon Stats
         run: |

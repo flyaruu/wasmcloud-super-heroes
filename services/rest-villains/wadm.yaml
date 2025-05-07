@@ -5,7 +5,7 @@ metadata:
   name: rest-villains
   annotations:
     version: v0.0.2
-    description: 'HTTP hello world demo in Rust, showing use of the server and client providers'
+    description: 'HTTP villains service'
 spec:
   components:
     - name: http-component
