@@ -97,3 +97,7 @@ jobs:
           path: |
             cardamon.db
             stats.txt
+            k6_none.json
+            k6_low.json
+            k6_high.json
+            k6_max.json
