@@ -16,8 +16,9 @@ export const options = {
       preAllocatedVUs: 20,
       maxVUs: 200,
       stages: [
-        { target: 500, duration: '10s' },
-        { target: 500, duration: '50s' },
+        { target: __ENV.RAMPING_RATE ? parseInt(__ENV.RAMPING_RATE) : 500, duration: '5s' },
+        { target: __ENV.RAMPING_RATE ? parseInt(__ENV.RAMPING_RATE) : 500, duration: '20s' },
+        { target: 0, duration: '5s' },
       ]
     },
   },
