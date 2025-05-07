@@ -1,13 +1,15 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
+const host = __ENV.K6_HOST || "http://localhost:8080"
+
 export function randomFight() {
     const json_post_header = {
         headers: {
             'Content-Type': 'application/json',
         },
     };
-    var response = http.get("http://localhost:8000/api/fights/randomfighters");
+    var response = http.get("http://wasmcloud:8000/api/fights/randomfighters");
     check(response, {
         'random fighters status is 200': (r) => r.status === 200,
     });
@@ -20,7 +22,7 @@ export function randomFight() {
         'villain is not fallback': (r) => !villain.name.toLowerCase().includes("fallback")
     })
 
-    var location_response = http.get("http://localhost:8000/api/fights/randomlocation");
+    var location_response = http.get("http://wasmcloud:8000/api/fights/randomlocation");
     check(response, {
         'location status is 200': (r) => r.status === 200,
     });
@@ -29,7 +31,7 @@ export function randomFight() {
         'location is not fallback': (r) => !location.name.toLowerCase().includes("fallback")
     })
     var fight_request = { hero: hero, villain: villain, location: location };
-    var fight_response = http.post("http://localhost:8000/api/fights", JSON.stringify(fight_request), json_post_header);
+    var fight_response = http.post("http://wasmcloud:8000/api/fights", JSON.stringify(fight_request), json_post_header);
     // console.log(fight_response);
     check(fight_response, {
         'fight result is 200': (r) => r.status === 200

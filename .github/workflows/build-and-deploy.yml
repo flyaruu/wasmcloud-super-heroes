@@ -76,6 +76,11 @@ jobs:
       - name: Wait for services to start
         run: |
           curl -X GET http://localhost:8000/api/fights/randomfight | jq
+    
+      - name: Run k6 tests
+        run: |
+          docker compose exec builder k6 run -e K6_HOST=http://localhost:8000 k6/low.js
+
     #   - name: Cardamon All
     #     run: |
     #       export LOG_FILTER=info
