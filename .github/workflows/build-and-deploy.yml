@@ -30,7 +30,7 @@ jobs:
       - name: Install curl
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl
+          sudo apt-get install -y curl jq
       - name: Install k6
         run: |
           echo "Installing k6 for architecture: $ARCHITECTURE" \
@@ -61,12 +61,18 @@ jobs:
       - name: Wait for services to start
         run: |
           sleep 10
-      - name: Run k6 tests
+      - name: Build wasm components
         run: |
           docker compose exec builder cargo build --target wasm32-wasip2 --release
           docker compose exec builder pwd 
           docker compose exec builder ls -la 
-          docker compose exec builder 'cd services && ./build.sh'
+          docker compose exec builder bash build.sh
+      - name: Wait for services to start
+        run: |
+          sleep 10
+      - name: Run tests
+        run: |
+          curl -X GET http://localhost:8000/api/fights/randomfight | jq
     #   - name: Cardamon All
     #     run: |
     #       export LOG_FILTER=info
