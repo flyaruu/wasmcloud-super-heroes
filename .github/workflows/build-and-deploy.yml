@@ -75,11 +75,11 @@ jobs:
           docker compose exec builder wash app list --ctl-host nats
       - name: Wait for services to start
         run: |
-          sleep 10
+          sleep 20
   
-      - name: Running initial curl
-        run: |
-          curl -X GET http://localhost:8000/api/fights/randomfight | jq
+    #   - name: Running initial curl
+    #     run: |
+    #       curl -X GET http://localhost:8000/api/fights/randomfight | jq
     
       - name: Run k6 tests
         run: |
