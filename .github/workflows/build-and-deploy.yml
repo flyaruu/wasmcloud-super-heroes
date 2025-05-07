@@ -63,9 +63,6 @@ jobs:
           sleep 10
       - name: Build wasm components
         run: |
-          docker compose exec builder cargo build --target wasm32-wasip2 --release
-          docker compose exec builder pwd 
-          docker compose exec builder ls -la 
           docker compose exec builder bash build.sh
       - name: Wait for services to start
         run: |
@@ -85,18 +82,18 @@ jobs:
         run: |
           k6 run -e K6_HOST=http://localhost:8000 k6/low.js
 
-    #   - name: Cardamon All
-    #     run: |
-    #       export LOG_FILTER=info
-    #       cardamon run all
-    #   - name: Cardamon Stats
-    #     run: |
-    #       cardamon stats >stats.txt
-    #       cat stats.txt
+      - name: Cardamon All
+        run: |
+          export LOG_FILTER=info
+          cardamon run all
+      - name: Cardamon Stats
+        run: |
+          cardamon stats >stats.txt
+          cat stats.txt
 
-    #   - uses: actions/upload-artifact@v4
-    #     with:
-    #       name: cardamon-metrics
-    #       path: |
-    #         cardamon.db
-    #         stats.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cardamon-metrics
+          path: |
+            cardamon.db
+            stats.txt

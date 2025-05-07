@@ -1,0 +1,68 @@
+#[cpu]
+#name = "Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz"
+#curve = [171.2,0.0354,36.89,-10.13]
+[cpu]
+name = "Apple M4 Pro"
+curve = [30.508760345993128,0.0730308567638932,20.451103066868207,-5.08379885619235]
+
+
+[[process]]
+name = "superheroes"
+up = "sleep 1"
+down = "sleep 1"
+redirect.to = "parent"
+process.type = "docker"
+process.containers = ["fights-db", "heroes-db", "villains-db", "locations-db", "wasmcloud"]
+
+startup_grace = "10s"
+
+[[scenario]]
+name = "high"
+desc = "High test for 60s"
+command = "k6 run k6/high.js"
+iterations = 3
+processes = ["superheroes"]
+
+[[scenario]]
+name = "low"
+desc = "Low load test."
+command = "k6 run k6/low.js"
+iterations = 3
+processes = ["superheroes"]
+
+[[scenario]]
+name = "none"
+desc = "No load test."
+command = "k6 run k6/none.js"
+iterations = 3
+processes = ["superheroes"]
+
+[[scenario]]
+name = "max"
+desc = "No load test."
+command = "k6 run k6/max.js"
+iterations = 3
+processes = ["superheroes"]
+
+[[observation]]
+name = "none"
+scenarios = ["none"]
+
+[[observation]]
+name = "low"
+scenarios = ["low"]
+
+[[observation]]
+name = "high"
+scenarios = ["high"]
+
+
+[[observation]]
+name = "max"
+scenarios = ["max"]
+
+[[observation]]
+name = "all"
+scenarios = ["none", "low", "high", "max"]
+
+

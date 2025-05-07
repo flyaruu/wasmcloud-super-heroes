@@ -1,4 +1,5 @@
 #!/bin/sh
+cargo build --target wasm32-wasip2 --release
 wash start provider ghcr.io/wasmcloud/sqldb-postgres:0.9.0 postgres-provider --ctl-host nats
 set -e
 cd services/rest-heroes
