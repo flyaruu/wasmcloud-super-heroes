@@ -11,6 +11,5 @@ RUN apt-get update && apt-get install -y \
 RUN rustup target add wasm32-wasip2
 # Verify installation
 RUN wash --version
-RUN cargo build --target wasm32-wasip2 --release
 
 CMD ["/bin/bash"]
