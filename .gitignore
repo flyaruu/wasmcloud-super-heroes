@@ -11,5 +11,6 @@ cardamon.db
 .stdout
 
 # Performnce data
-perf_data/
+perf_data/*.json
+perf_data/stats.txt
 
