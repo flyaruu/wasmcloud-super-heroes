@@ -7,3 +7,9 @@ registry_data/
 
 # Cardamon db
 cardamon.db
+.stderr
+.stdout
+
+# Performnce data
+perf_data/
+
