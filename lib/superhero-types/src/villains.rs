@@ -1,4 +1,4 @@
-use bindings::api::wasmcloud::postgres::types::ResultRowEntry;
+use bindings::hero_repository::wasmcloud::postgres::types::ResultRowEntry;
 use serde::{Deserialize, Serialize};
 
 use crate::{

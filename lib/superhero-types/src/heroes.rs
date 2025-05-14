@@ -1,4 +1,4 @@
-use bindings::api::wasmcloud::postgres::types::ResultRowEntry;
+use bindings::hero_repository::{exports::superheroes::host::hero_repository::Hero, wasmcloud::postgres::types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -8,12 +8,25 @@ use crate::{
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SqlHero {
-    id: i64,
+    pub id: i64,
     pub level: i32,
     pub name: String,
     pub other_name: Option<String>,
     pub picture: String,
     pub powers: String,
+}
+
+impl Into<Hero> for SqlHero {
+    fn into(self) -> Hero {
+        Hero {
+            id: self.id,
+            level: self.level,
+            name: self.name,
+            other_name: self.other_name,
+            picture: self.picture,
+            powers: self.powers,
+        }
+    }
 }
 
 impl From<&Vec<ResultRowEntry>> for SqlHero {

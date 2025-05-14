@@ -1,8 +1,34 @@
-package superheroes:bindings;
-world superhero-world {
+package superheroes:host;
+
+  // export wasi:http/incoming-handler@0.2.4;
+
+interface types {
+    record hero {
+      id: s64,
+      level: s32,
+      name: string,
+      other-name: option<string>,
+      picture: string,
+      powers: string,
+    }
+}
+
+interface hero-repository {
+  use types.{hero};
+  get-hero: func(id: s64) -> option<hero>;
+  get-random-hero: func() -> hero;
+  get-all-heroes: func() -> list<hero>;  
+}
+
+world hero-repository-world {
   import wasmcloud:postgres/query@0.1.1-draft;
   import wasi:logging/logging@0.1.0-draft;
-  import wasi:http/outgoing-handler@0.2.4;
-  import wasi:http/incoming-handler@0.2.4;
+  export hero-repository;
+}
+
+world hero-api-world {
   export wasi:http/incoming-handler@0.2.4;
+  import wasi:logging/logging@0.1.0-draft;
+  import hero-repository;
+  // import hero-repository;
 }

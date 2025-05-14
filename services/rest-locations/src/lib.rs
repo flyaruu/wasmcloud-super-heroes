@@ -1,11 +1,11 @@
-use bindings::api::{
-    exports::wasi::http::incoming_handler::Guest,
-    wasi::http::incoming_handler::{IncomingRequest, ResponseOutparam},
-    wasmcloud::postgres::query::{query, PgValue},
-};
-use superhero_types::{location::SqlLocation, write_output, write_status_message};
 
-bindings::api::export!(LocationFetcher with_types_in bindings::api);
+use bindings::component::wasmcloud::postgres::query::{query, PgValue};
+use superhero_types::{location::SqlLocation, write_output, write_status_message};
+use wasi::{exports::http::incoming_handler::Guest, http::types::{IncomingRequest, ResponseOutparam}};
+
+bindings::component::export!(LocationFetcher with_types_in bindings::component);
+
+
 struct LocationFetcher;
 impl Guest for LocationFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {

@@ -1,10 +1,5 @@
 use std::io::Read;
 
-use bindings::api::{
-    export,
-    exports::wasi::http::incoming_handler::Guest,
-    wasi::logging::logging::{log, Level},
-};
 use superhero_types::{
     fights::{FightRequest, FightResult, Fighters, Winner},
     heroes::SqlHero,
@@ -12,11 +7,11 @@ use superhero_types::{
     villains::SqlVillain,
     write_output, write_status_message,
 };
-use wasi::http::types::*;
+use wasi::{exports::http::incoming_handler::Guest, http::types::*};
 
 struct FightService;
 
-export!(FightService with_types_in bindings::api);
+export!(FightService with_types_in bindings::component);
 
 impl Guest for FightService {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {

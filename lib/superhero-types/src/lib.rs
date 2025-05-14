@@ -1,14 +1,9 @@
-use bindings::api::{
-    wasi::{
-        http::incoming_handler::ResponseOutparam,
-        logging::logging::{log, Level},
-    },
-    wasmcloud::postgres::query::PgValue,
-};
+
+use bindings::{api::wasi::logging::logging::{log, Level}, hero_repository::wasmcloud::postgres::query::PgValue};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{
     outgoing_handler,
-    types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, Scheme},
+    types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, ResponseOutparam, Scheme},
 };
 
 pub mod fights;

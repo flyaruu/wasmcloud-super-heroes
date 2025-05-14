@@ -1,11 +1,10 @@
-use bindings::api::{
-    exports::wasi::http::incoming_handler::Guest,
-    wasi::http::incoming_handler::{IncomingRequest, ResponseOutparam},
-    wasmcloud::postgres::query::{query, PgValue},
-};
-use superhero_types::{villains::SqlVillain, write_output, write_status_message};
 
-bindings::api::export!(VillainFetcher with_types_in bindings::api);
+use bindings::component::wasmcloud::postgres::query::{query, PgValue};
+use superhero_types::{villains::SqlVillain, write_output, write_status_message};
+use wasi::{exports::http::incoming_handler::{Guest, ResponseOutparam}, http::types::IncomingRequest};
+
+bindings::component::export!(VillainFetcher with_types_in bindings::component);
+
 struct VillainFetcher;
 impl Guest for VillainFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
