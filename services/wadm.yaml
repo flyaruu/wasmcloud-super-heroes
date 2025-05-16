@@ -1,0 +1,137 @@
+---
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: hero
+  annotations:
+    version: v0.1.0
+    description: 'HTTP repository querying superheroes'
+spec:
+  components:
+    - name: hero-rest
+      type: component
+      properties:
+        image: registry:5000/superheroes/hero-rest:0.1.0
+      traits:
+        # Govern the spread/scheduling of the component
+        - type: spreadscaler
+          properties:
+            instances: 1
+        - type: link
+          properties:
+            target: 
+              name: hero-repository
+            namespace: hti
+            package: superheroes
+            interfaces: [hero-repository]
+
+    # Add a capability provider that enables HTTP access
+    - name: httpserver-hero
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/http-server:0.27.0
+      traits:
+        - type: link
+          properties:
+            target:
+              name: hero-rest
+            namespace: wasi
+            package: http
+            interfaces: [incoming-handler]
+            source:
+              config:
+                - name: rest-heroes-http
+                  properties:
+                    address: 0.0.0.0:8001
+    # Add a capability provider that enables HTTP access
+    - name: httpserver-villain
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/http-server:0.27.0
+      traits:
+        - type: link
+          properties:
+            target:
+              name: villain-rest
+            namespace: wasi
+            package: http
+            interfaces: [incoming-handler]
+            source:
+              config:
+                - name: rest-villains-http
+                  properties:
+                    address: 0.0.0.0:8002
+
+    - name: hero-repository
+      type: component
+      properties:
+        image: registry:5000/superheroes/hero-repository:0.1.0
+      traits:
+        - type: spreadscaler
+          properties:
+            instances: 1
+        - type: link
+          properties:
+            target:
+              name: sqldb-postgres-hero
+              config:
+                - name: heroes-postgres
+            namespace: wasmcloud
+            package: postgres
+            interfaces: [query]
+            source:
+              config:
+                - name: heroes-postgres
+
+    # Add a capability provider that enables HTTP access
+    - name: sqldb-postgres-hero
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/sqldb-postgres:0.10.0
+        config:
+          - name: heroes-postgres
+
+    - name: villain-repository
+      type: component
+      properties:
+        image: registry:5000/superheroes/villain-repository:0.1.0
+      traits:
+        - type: spreadscaler
+          properties:
+            instances: 1
+        - type: link
+          properties:
+            target:
+              name: sqldb-postgres-villain
+              config:
+                - name: villains-postgres
+            namespace: wasmcloud
+            package: postgres
+            interfaces: [query]
+            source:
+              config:
+                - name: villains-postgres
+
+    - name: sqldb-postgres-villain
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/sqldb-postgres:0.10.0
+        config:
+          - name: villains-postgres
+
+    - name: villain-rest
+      type: component
+      properties:
+        image: registry:5000/superheroes/villain-rest:0.1.0
+      traits:
+        # Govern the spread/scheduling of the component
+        - type: spreadscaler
+          properties:
+            instances: 1
+        - type: link
+          properties:
+            target: 
+              name: villain-repository
+            namespace: hti
+            package: superheroes
+            interfaces: [villain-repository]

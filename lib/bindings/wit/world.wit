@@ -55,13 +55,13 @@ world villain-repository-world {
 world hero-api-world {
   export wasi:http/incoming-handler@0.2.4;
   import wasi:logging/logging@0.1.0-draft;
-  // import hero-repository;
+  import hero-repository;
 }
 
 world villain-api-world {
   export wasi:http/incoming-handler@0.2.4;
   import wasi:logging/logging@0.1.0-draft;
-  // import villain-repository;
+  import villain-repository;
 }
 
 

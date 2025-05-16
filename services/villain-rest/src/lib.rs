@@ -1,17 +1,56 @@
+use std::io::Read;
+
+use bindings::{exports::wasi::http::incoming_handler::Guest, hti::superheroes::villain_repository::{get_all_villains, get_random_villain, get_villain}, wasi::logging::logging::{log, Level}};
 use serde::{de::DeserializeOwned, Serialize};
-use wasi::http::{
-    outgoing_handler,
-    types::{Fields, IncomingBody, OutgoingBody, OutgoingRequest, OutgoingResponse, ResponseOutparam, Scheme},
-};
+use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, IncomingRequest, OutgoingBody, OutgoingRequest, OutgoingResponse, ResponseOutparam, Scheme}};
 
-// pub mod fights;
-// pub mod heroes;
-// pub mod location;
-// pub mod villains;
+pub mod bindings {
+    wit_bindgen::generate!({ 
+        world: "villain-api-world",
+        path: ["../../lib/bindings/wit/"],
+        additional_derives: [serde::Serialize, serde::Deserialize],
+        pub_export_macro: true,
+        with: {
+            "wasi:clocks/monotonic-clock@0.2.4": ::wasi::clocks::monotonic_clock,
+            "wasi:http/incoming-handler@0.2.4": generate,
+            "wasi:http/types@0.2.4": ::wasi::http::types,
+            "wasi:io/error@0.2.4": ::wasi::io::error,
+            "wasi:io/poll@0.2.4": ::wasi::io::poll,
+            "wasi:io/streams@0.2.4": ::wasi::io::streams,
+            "wasi:logging/logging@0.1.0-draft": generate,
+        },
+    });
+}
 
-use std::{io::Read, str::from_utf8};
+struct VillainFetcher;
+impl Guest for VillainFetcher {
+    fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
+        log(Level::Info, ">>", "Request found!");
+        if let Some(path) = request.path_with_query() {
+            if path.starts_with("/api/villains/random_villain") {
+                write_output(response_out, &get_random_villain());
+                return;
+            }
+            if path.starts_with("/api/villains/") {
+                let id: String = path.chars().skip("/api/villains/".len()).collect();
+                match id.parse::<i64>() {
+                    Ok(id) => write_output(response_out, &get_villain(id)),
+                    Err(e) => {
+                        write_status_message(response_out, format!("Invalid id: {}", e), 400);
+                    }
+                };
+                return;
+            }
+            if path.starts_with("/api/villains") {
+                write_output(response_out, &get_all_villains());
+                return;
+            }
+            write_status_message(response_out, format!("Path not found: {}", path), 404);
+        }
+    }
+}
 
-use crate::{bindings::wasi::logging::logging::{log, Level}, bindings::wasmcloud::postgres::query::PgValue};
+crate::bindings::export!(VillainFetcher with_types_in crate::bindings);
 
 pub fn write_status_message(response_out: ResponseOutparam, message: String, status_code: u16) {
     let response = OutgoingResponse::new(Fields::new());
@@ -90,40 +129,5 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
             }
         }
         Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
-    }
-}
-
-pub fn get_string_from_value(value: &PgValue) -> String {
-    match value {
-        PgValue::Varchar((_, s)) => from_utf8(s).unwrap().to_owned(),
-        PgValue::Text(s) => s.clone(),
-        _ => panic!("Invalid type: {:?}", value),
-    }
-}
-
-pub fn get_optional_string_from_value(value: &PgValue) -> Option<String> {
-    match value {
-        PgValue::Varchar((_, s)) => Some(from_utf8(s).unwrap().to_owned()),
-        PgValue::Null => None,
-        _ => panic!("Invalid type: {:?}", value),
-    }
-}
-
-pub fn get_i32_from_value(value: &PgValue) -> i32 {
-    match value {
-        PgValue::Int(i) => *i,
-        PgValue::BigInt(i) => *i as i32,
-        PgValue::Int4(i) => *i,
-        PgValue::Int8(i) => *i as i32,
-        _ => panic!("Invalid type: {:?}", value),
-    }
-}
-
-pub fn get_i64_from_value(value: &PgValue) -> i64 {
-    match value {
-        PgValue::BigInt(i) => *i,
-        PgValue::Int(i) => *i as i64,
-        PgValue::Int8(i) => *i,
-        _ => panic!("Invalid type: {:?}", value),
     }
 }

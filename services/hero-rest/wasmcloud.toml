@@ -1,4 +1,4 @@
-name = "rest-heroes"
+name = "hero-rest"
 version = "0.1.0"
 language = "rust"
 type = "component"

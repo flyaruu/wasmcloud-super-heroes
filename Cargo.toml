@@ -1,8 +1,6 @@
 [workspace]
 members = [
-    "services/rest-heroes",
-    # "services/rest-villains",
-    # "lib/bindings"
+    "services/villain-repository", "services/hero-repository", "services/hero-rest", "services/villain-rest",
 ]
 [workspace.dependencies]
 chrono = "0.4.40"

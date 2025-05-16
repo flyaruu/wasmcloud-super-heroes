@@ -1,22 +1,22 @@
-// use bindings::{hti::superheroes::types::Hero, wasmcloud::postgres::types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
 
-use crate::{bindings::hti::superheroes::types::Hero, types::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value}, bindings::wasmcloud::postgres::types::ResultRowEntry};
+use crate::{bindings::{hti::superheroes::types::Villain, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value}};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct SqlHero {
-    pub id: i64,
+pub struct SqlVillain {
+    id: i64,
     pub level: i32,
     pub name: String,
+    // #[serde(skip_serializing_if = "String::is_empty")]
     pub other_name: Option<String>,
     pub picture: String,
     pub powers: String,
 }
 
-impl Into<Hero> for SqlHero {
-    fn into(self) -> Hero {
-        Hero {
+impl Into<Villain> for SqlVillain {
+    fn into(self) -> Villain {
+        Villain {
             id: self.id,
             level: self.level,
             name: self.name,
@@ -27,7 +27,7 @@ impl Into<Hero> for SqlHero {
     }
 }
 
-impl From<&Vec<ResultRowEntry>> for SqlHero {
+impl From<&Vec<ResultRowEntry>> for SqlVillain {
     fn from(row: &Vec<ResultRowEntry>) -> Self {
         let mut id = 0;
         let mut level = 0;
@@ -48,7 +48,7 @@ impl From<&Vec<ResultRowEntry>> for SqlHero {
             }
         }
 
-        SqlHero {
+        SqlVillain {
             id,
             level,
             name,
