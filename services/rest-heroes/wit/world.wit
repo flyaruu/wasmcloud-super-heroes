@@ -1,0 +1,7 @@
+package superheroes:hero-repository;
+
+
+world hero-world {
+  import hti:superheroes/hero-repository-world;
+  export hti:superheroes/hero-repository;
+}

@@ -2,7 +2,7 @@
 members = [
     "services/rest-heroes",
     # "services/rest-villains",
-    "lib/*"
+    # "lib/bindings"
 ]
 [workspace.dependencies]
 chrono = "0.4.40"

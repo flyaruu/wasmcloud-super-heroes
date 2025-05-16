@@ -1,6 +1,6 @@
+use crate::{bindings::exports::hti::superheroes::hero_repository::Guest, heroes::SqlHero, bindings::hti::superheroes::types::Hero, bindings::wasmcloud::postgres::query::{query, PgValue}};
 
-use bindings::{exports::hti::superheroes::hero_repository::Guest, hti::superheroes::types::Hero, wasmcloud::postgres::query::{query, PgValue}};
-use superhero_types::heroes::SqlHero;
+
 
 struct HeroRepository;
 
@@ -26,4 +26,4 @@ impl Guest for HeroRepository {
     }
 }
 
-bindings::export!(HeroRepository with_types_in bindings);
+crate::bindings::export!(HeroRepository with_types_in crate::bindings);

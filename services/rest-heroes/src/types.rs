@@ -1,4 +1,3 @@
-use bindings::{wasi::logging::logging::{log, Level}, wasmcloud::postgres::query::PgValue};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{
     outgoing_handler,
@@ -11,6 +10,8 @@ use wasi::http::{
 // pub mod villains;
 
 use std::{io::Read, str::from_utf8};
+
+use crate::{bindings::wasi::logging::logging::{log, Level}, bindings::wasmcloud::postgres::query::PgValue};
 
 pub fn write_status_message(response_out: ResponseOutparam, message: String, status_code: u16) {
     let response = OutgoingResponse::new(Fields::new());

@@ -9,6 +9,5 @@ crate-type = ["cdylib"]
 [dependencies]
 serde = { workspace = true}
 serde_json = { workspace = true }
-bindings = { path = "../../lib/bindings" }
-superhero-types = { path = "../../lib/superhero-types" }
+wit-bindgen = { workspace = true }
 wasi = { workspace = true }
