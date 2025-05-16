@@ -1,10 +1,8 @@
 mod hero_repository;
 
-use bindings::api::superheroes::host::hero_repository::{get_all_heroes, get_hero, get_random_hero};
-// use bindings::api::superheroes::host::hero_repository::
+use bindings::{hti::superheroes::hero_repository::{get_all_heroes, get_hero, get_random_hero}};
 use superhero_types::{write_output, write_status_message};
-use bindings::api::exports::wasi::http::incoming_handler::Guest;
-use wasi::http::types::{IncomingRequest, ResponseOutparam};
+use wasi::{exports::http::incoming_handler::Guest, http::types::{IncomingRequest, ResponseOutparam}};
 struct HeroFetcher;
 impl Guest for HeroFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
@@ -31,4 +29,7 @@ impl Guest for HeroFetcher {
         }
     }
 }
-bindings::api::export!(HeroFetcher with_types_in bindings::api);
+bindings::export!(HeroFetcher with_types_in bindings);
+// bindings::superhero::export!(HeroFetcher with_types_in bindings::superhero);
+// bindings::superheroes::host::hero_repository::export!(HeroFetcher with_types_in bindings::superheroes::host::hero_repository);
+// bindings::api::export!(HeroFetcher with_types_in bindings::api);

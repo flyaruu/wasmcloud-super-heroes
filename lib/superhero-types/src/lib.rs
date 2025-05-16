@@ -1,5 +1,4 @@
-
-use bindings::{api::wasi::logging::logging::{log, Level}, hero_repository::wasmcloud::postgres::query::PgValue};
+use bindings::{wasi::logging::logging::{log, Level}, wasmcloud::postgres::query::PgValue};
 use serde::{de::DeserializeOwned, Serialize};
 use wasi::http::{
     outgoing_handler,

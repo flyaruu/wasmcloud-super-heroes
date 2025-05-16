@@ -1,5 +1,5 @@
 
-use bindings::hero_repository::{exports::superheroes::host::hero_repository::Guest, superheroes::host::types::Hero, wasmcloud::postgres::query::{query, PgValue}};
+use bindings::{exports::hti::superheroes::hero_repository::Guest, hti::superheroes::types::Hero, wasmcloud::postgres::query::{query, PgValue}};
 use superhero_types::heroes::SqlHero;
 
 struct HeroRepository;
@@ -25,5 +25,5 @@ impl Guest for HeroRepository {
             .collect()
     }
 }
-bindings::hero_repository::export!(HeroRepository with_types_in bindings::hero_repository);
 
+bindings::export!(HeroRepository with_types_in bindings);

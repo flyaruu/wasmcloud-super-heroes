@@ -1,8 +1,9 @@
-package superheroes:host;
+package hti:superheroes;
 
   // export wasi:http/incoming-handler@0.2.4;
 
 interface types {
+  
     record hero {
       id: s64,
       level: s32,
@@ -11,7 +12,21 @@ interface types {
       picture: string,
       powers: string,
     }
+    record villain {
+      id: s64,
+      level: s32,
+      name: string,
+      other-name: option<string>,
+      picture: string,
+      powers: string,
+    }    
 }
+
+world base {
+  import wasmcloud:postgres/query@0.1.1-draft;
+  import wasi:logging/logging@0.1.0-draft;
+}
+
 
 interface hero-repository {
   use types.{hero};
@@ -20,15 +35,40 @@ interface hero-repository {
   get-all-heroes: func() -> list<hero>;  
 }
 
+interface villain-repository {
+  use types.{villain};
+  get-villain: func(id: s64) -> option<villain>;
+  get-random-villain: func() -> villain;
+  get-all-villains: func() -> list<villain>;  
+}
+
 world hero-repository-world {
-  import wasmcloud:postgres/query@0.1.1-draft;
-  import wasi:logging/logging@0.1.0-draft;
+  include base;
   export hero-repository;
+}
+
+world villain-repository-world {
+  include base;
+  export villain-repository;
 }
 
 world hero-api-world {
   export wasi:http/incoming-handler@0.2.4;
   import wasi:logging/logging@0.1.0-draft;
   import hero-repository;
-  // import hero-repository;
+}
+
+world villain-api-world {
+  export wasi:http/incoming-handler@0.2.4;
+  import wasi:logging/logging@0.1.0-draft;
+  import villain-repository;
+}
+
+world superhero {
+  include base;
+  include hero-repository-world;
+  include villain-repository-world;
+  include hero-api-world;
+  include villain-api-world;
+
 }

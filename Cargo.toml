@@ -1,6 +1,7 @@
 [workspace]
 members = [
-    "services/*",
+    "services/rest-heroes",
+    # "services/rest-villains",
     "lib/*"
 ]
 [workspace.dependencies]

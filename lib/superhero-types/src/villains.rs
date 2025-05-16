@@ -1,4 +1,4 @@
-use bindings::hero_repository::wasmcloud::postgres::types::ResultRowEntry;
+use bindings::{hti::superheroes::types::Villain, wasmcloud::postgres::types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -15,6 +15,19 @@ pub struct SqlVillain {
     pub other_name: Option<String>,
     pub picture: String,
     pub powers: String,
+}
+
+impl Into<Villain> for SqlVillain {
+    fn into(self) -> Villain {
+        Villain {
+            id: self.id,
+            level: self.level,
+            name: self.name,
+            other_name: self.other_name,
+            picture: self.picture,
+            powers: self.powers,
+        }
+    }
 }
 
 impl From<&Vec<ResultRowEntry>> for SqlVillain {

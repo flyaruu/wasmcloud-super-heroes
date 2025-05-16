@@ -1,4 +1,4 @@
-use bindings::hero_repository::{exports::superheroes::host::hero_repository::Hero, wasmcloud::postgres::types::ResultRowEntry};
+use bindings::{hti::superheroes::types::Hero, wasmcloud::postgres::types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
 
 use crate::{
