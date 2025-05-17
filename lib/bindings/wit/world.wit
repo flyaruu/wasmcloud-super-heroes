@@ -19,7 +19,23 @@ interface types {
       other-name: option<string>,
       picture: string,
       powers: string,
-    }    
+    }
+    record location {
+      id: s64,
+      name: string,
+      description: string,
+      picture: string,
+      %type: location-type, // TODO use enum
+    }
+
+    variant location-type {
+      city,
+      planet,
+      place,
+      island,
+      country,
+      moon           
+    }
 }
 
 world base {
@@ -42,6 +58,14 @@ interface villain-repository {
   get-all-villains: func() -> list<villain>;  
 }
 
+interface location-repository {
+  use types.{location};
+  get-location: func(id: s64) -> option<location>;
+  get-random-location: func() -> location;
+  get-all-locations: func() -> list<location>;  
+}
+
+
 world hero-repository-world {
   include base;
   export hero-repository;
@@ -50,6 +74,11 @@ world hero-repository-world {
 world villain-repository-world {
   include base;
   export villain-repository;
+}
+
+world location-repository-world {
+  include base;
+  export location-repository;
 }
 
 world hero-api-world {
@@ -63,6 +92,13 @@ world villain-api-world {
   import wasi:logging/logging@0.1.0-draft;
   import villain-repository;
 }
+
+world location-api-world {
+  export wasi:http/incoming-handler@0.2.4;
+  import wasi:logging/logging@0.1.0-draft;
+  import location-repository;
+}
+
 
 
 world superhero {
