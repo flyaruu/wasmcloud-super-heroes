@@ -1,6 +1,5 @@
 package hti:superheroes;
 
-  // export wasi:http/incoming-handler@0.2.4;
 
 interface types {
   
@@ -36,6 +35,38 @@ interface types {
       country,
       moon           
     }
+
+    variant team {
+      heroes,
+      villains
+    }
+
+    record fight-result {
+      id: string,
+      fight-date: u64,
+      winner-name: string,
+      winner-level: s32,
+      winner-powers: string,
+      winner-picture: string,
+      loser-name: string,
+      loser-level: s32,
+      loser-powers: string,
+      loser-picture: string,
+      winner-team: team,
+      loser-team: team,
+      location: location
+    }
+
+    record fight-request {
+      hero: hero,
+      villain: villain,
+      location: location
+    }
+
+    record fighters {
+      hero: hero,
+      villain: villain
+    }
 }
 
 world base {
@@ -65,6 +96,17 @@ interface location-repository {
   get-all-locations: func() -> list<location>;  
 }
 
+interface perform-fight {
+  use types.{fight-result,fight-request,fighters};
+  perform-fight: func(request: fight-request) -> fight-result;
+}
+
+interface hero-api {
+  use types.{hero};
+  get-hero: func(id: s64) -> option<hero>;
+  get-random-hero: func() -> hero;
+  get-all-heroes: func() -> list<hero>;  
+}
 
 world hero-repository-world {
   include base;
@@ -99,12 +141,18 @@ world location-api-world {
   import location-repository;
 }
 
+world fight-api-world {
+  use types.{hero,villain,fighters,location,fight-result,fight-request};
+  export perform-fight;
+  export wasi:http/incoming-handler@0.2.4;
+  import wasi:logging/logging@0.1.0-draft;
+  import wasi:http/outgoing-handler@0.2.4;
+  import wasi:clocks/wall-clock@0.2.4;
 
+}
 
 world superhero {
   include base;
-  // include hero-repository-world;
-  // include villain-repository-world;
   include hero-api-world;
   include villain-api-world;
 
