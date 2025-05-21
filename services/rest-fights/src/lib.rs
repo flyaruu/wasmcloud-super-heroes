@@ -32,6 +32,14 @@ struct FightService;
 impl bindings::exports::hti::superheroes::perform_fight::Guest for FightService {
 
     #[allow(async_fn_in_trait)]
+    fn random_fighters() -> (String, String) {
+        // let hero = get_random_hero().unwrap();
+        // let villain = get_random_villain().unwrap();
+        // (hero, villain)
+        ("hero".to_string(), "villain".to_string())
+    }
+
+    #[allow(async_fn_in_trait)]
     fn perform_fight(request:FightRequest) -> FightResult {
         let hero = request.hero;
         let villain = request.villain;
@@ -124,19 +132,21 @@ impl Guest for FightService {
     }
 }
 
-fn random_fighters()->Fighters {
+fn random_fighters()->(Hero,Villain) {
+    // bindings::hti::superheroes::types::Fighters;
     let hero = get_random_hero().unwrap();
     let villain = get_random_villain().unwrap();
-    Fighters {hero, villain}
+    (hero, villain)
 }
 
 fn execute_fight(hero: &Hero, villain: &Villain, location: &Location) -> Result<FightResult, String> {
+    let timestamp = wasi::clocks::wall_clock::now().seconds;
     let winner = if hero.level > villain.level {
         Team::Heroes
     } else {
         Team::Villains
     };
-    Ok(FightResult::new(winner, &hero, &villain, &location))
+    Ok(FightResult::new(winner, &hero, &villain, &location, timestamp))
 }
 
 

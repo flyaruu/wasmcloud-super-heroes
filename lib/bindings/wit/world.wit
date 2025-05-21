@@ -41,6 +41,8 @@ interface types {
       villains
     }
 
+
+
     record fight-result {
       id: string,
       fight-date: u64,
@@ -56,16 +58,16 @@ interface types {
       loser-team: team,
       location: location
     }
+    
+    record fighters {
+      hero: hero,
+      villain: villain
+    }
 
     record fight-request {
       hero: hero,
       villain: villain,
       location: location
-    }
-
-    record fighters {
-      hero: hero,
-      villain: villain
     }
 }
 
@@ -97,7 +99,8 @@ interface location-repository {
 }
 
 interface perform-fight {
-  use types.{fight-result,fight-request,fighters};
+  use types.{fight-result, fight-request, hero, villain, fighters};
+  random-fighters: func() -> fighters;
   perform-fight: func(request: fight-request) -> fight-result;
 }
 
@@ -142,7 +145,7 @@ world location-api-world {
 }
 
 world fight-api-world {
-  use types.{hero,villain,fighters,location,fight-result,fight-request};
+  use types.{hero,villain,location,fight-result,fight-request};
   export perform-fight;
   export wasi:http/incoming-handler@0.2.4;
   import wasi:logging/logging@0.1.0-draft;
