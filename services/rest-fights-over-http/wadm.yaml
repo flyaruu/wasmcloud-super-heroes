@@ -19,7 +19,7 @@ spec:
       properties:
         # To use the locally compiled code in this folder, use the line below instead after running `wash build`:
         # image: file://./build/dog_fetcher_s.wasm
-        image: registry:5000/superheroes/rest-fights:0.1.0
+        image: registry:5000/superheroes/rest-fights-over-http:0.1.0
       traits:
         # Govern the spread/scheduling of the component
         - type: spreadscaler

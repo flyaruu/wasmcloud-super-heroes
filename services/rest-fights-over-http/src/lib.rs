@@ -1,10 +1,12 @@
 use std::io::Read;
 
 
-use bindings::{exports::{hti::superheroes::perform_fight::{FightRequest, FightResult}, wasi::http::incoming_handler::Guest}, hti::superheroes::types::{Hero, Location, Team, Villain}, wasi::logging::logging::{log, Level}};
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use wasi::{http::{outgoing_handler, types::*}};
+use bindings::{exports::{hti::superheroes::perform_fight::{FightRequest, FightResult}, wasi::http::incoming_handler::Guest}, hti::superheroes::types::{Fighters, Hero, Location, Team, Villain}, wasi::logging::logging::{log, Level}};
+use http::{get_random_hero, get_random_location, get_random_villain};
+use serde::Serialize;
+use wasi::{clocks::wall_clock, http::types::*};
 
+mod http;
 pub mod bindings {
     wit_bindgen::generate!({ 
         world: "fight-api-world",
@@ -32,11 +34,8 @@ struct FightService;
 impl bindings::exports::hti::superheroes::perform_fight::Guest for FightService {
 
     #[allow(async_fn_in_trait)]
-    fn random_fighters() -> (String, String) {
-        // let hero = get_random_hero().unwrap();
-        // let villain = get_random_villain().unwrap();
-        // (hero, villain)
-        ("hero".to_string(), "villain".to_string())
+    fn random_fighters() -> Fighters {
+        random_fighters()
     }
 
     #[allow(async_fn_in_trait)]
@@ -46,24 +45,8 @@ impl bindings::exports::hti::superheroes::perform_fight::Guest for FightService 
         let location = request.location;
 
         let now = wasi::clocks::wall_clock::now().seconds;
-        let id = uuid::Uuid::new_v4().to_string();
-
         if hero.level > villain.level {
-            FightResult {
-                id: id,
-                fight_date: now,
-                winner_name: hero.name.clone(),
-                winner_level: hero.level,
-                winner_powers: hero.powers.clone(),
-                winner_picture: hero.picture.clone(),
-                loser_name: villain.name.clone(),
-                loser_level: villain.level,
-                loser_powers: villain.powers.clone(),
-                loser_picture: villain.picture.clone(),
-                winner_team: Team::Heroes,
-                loser_team: todo!(),
-                location,
-            }
+            FightResult::new(Team::Heroes, &hero, &villain, &location, now)
         } else {
             FightResult::new(Team::Villains, &hero, &villain, &location,now)
         }
@@ -74,6 +57,7 @@ bindings::export!(FightService with_types_in bindings);
 
 impl Guest for FightService {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
+        log(Level::Info, "Fight request", format!("Request: {:?} == {:?}", request.method(), request.path_with_query()).as_str());
         if let Some(path) = request.path_with_query() {
             match (request.method(), path.as_str()) {
                 (Method::Get, "/api/fights/randomfighters") => {
@@ -132,11 +116,11 @@ impl Guest for FightService {
     }
 }
 
-fn random_fighters()->(Hero,Villain) {
+fn random_fighters()->Fighters {
     // bindings::hti::superheroes::types::Fighters;
     let hero = get_random_hero().unwrap();
     let villain = get_random_villain().unwrap();
-    (hero, villain)
+    Fighters { hero, villain }
 }
 
 fn execute_fight(hero: &Hero, villain: &Villain, location: &Location) -> Result<FightResult, String> {
@@ -154,26 +138,19 @@ fn execute_random_fight() -> Result<FightResult, String> {
     let hero = get_random_hero()?;
     let villain = get_random_villain()?;
     let location = get_random_location()?;
+    let now = wall_clock::now().seconds;
     let winner = if hero.level > villain.level {
         Team::Heroes
     } else {
         Team::Villains
     };
-    Ok(FightResult::new(winner, &hero, &villain, &location))
+    Ok(FightResult::new(winner, &hero, &villain, &location, now))
 }
 
 
 
-fn get_random_hero() -> Result<Hero, String> {
-    get_item::<Hero>("wasmcloud:8001", "/api/heroes/random_hero")
-}
+// Outgoing http version
 
-fn get_random_location() -> Result<Location, String> {
-    get_item::<Location>("wasmcloud:8003", "/api/locations/random_location")
-}
-fn get_random_villain() -> Result<Villain, String> {
-    get_item::<Villain>("wasmcloud:8002", "/api/villains/random_villain")
-}
 
 pub fn write_status_message(response_out: ResponseOutparam, message: String, status_code: u16) {
     let response = OutgoingResponse::new(Fields::new());
@@ -204,56 +181,6 @@ pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: 
     OutgoingBody::finish(response_body, None).expect("failed to finish response body");
 }
 
-pub fn get_item<D: DeserializeOwned>(host: &str, path: &str) -> Result<D, String> {
-    let data = get_bytes(host, path)?;
-    serde_json::from_slice(&data).map_err(|e| format!("Failed to parse response: {}", e))
-}
-
-pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
-    let req = OutgoingRequest::new(Fields::new());
-    req.set_scheme(Some(&Scheme::Http)).unwrap();
-    req.set_authority(Some(host)).unwrap();
-    req.set_path_with_query(Some(path)).unwrap();
-
-    log(
-        Level::Info,
-        "request",
-        &format!("Creating outgoing request2: {:?}", req),
-    );
-    match outgoing_handler::handle(req, None) {
-        Ok(resp) => {
-            resp.subscribe().block();
-            let response = resp
-                .get()
-                .expect("HTTP request response missing")
-                .expect("HTTP request response requested more than once")
-                .expect("HTTP request failed");
-            if response.status() == 200 {
-                let response_body = response
-                    .consume()
-                    .expect("failed to get incoming request body");
-                let body = {
-                    let mut buf = vec![];
-                    let mut stream = response_body
-                        .stream()
-                        .expect("failed to get HTTP request response stream");
-                    stream
-                        .read_to_end(&mut buf)
-                        .expect("failed to read value from HTTP request response stream");
-                    buf
-                };
-                let _trailers = IncomingBody::finish(response_body);
-                Ok(body)
-            } else {
-                Err(format!(
-                    "HTTP request failed with status code {}",
-                    response.status()
-                ))
-            }
-        }
-        Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
-    }
-}
 
 impl FightResult {
     pub fn new(
@@ -300,16 +227,7 @@ impl FightResult {
             Team::Heroes => villain.picture.clone(),
             Team::Villains => hero.picture.clone(),
         };
-        // let winner_team = match winner {
-        //     Team::Heroes => "heroes",
-        //     Team::Villains => "villains",
-        // };
-        // let loser_team = match winner {
-        //     Team::Villains => "heroes",
-        //     Team::Heroes => "villains",
-        // };
-
-        FightResult {
+        Self {
             id: id.to_string(),
             fight_date: timestamp,
             winner_name,

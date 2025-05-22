@@ -1,5 +1,5 @@
 [package]
-name = "rest-fights"
+name = "rest-fights-over-http"
 edition = "2021"
 version = "0.1.1"
 
