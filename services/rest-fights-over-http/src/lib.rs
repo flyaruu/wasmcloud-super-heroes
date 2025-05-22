@@ -1,7 +1,7 @@
 use std::io::Read;
 
 
-use bindings::{exports::{hti::superheroes::perform_fight::{FightRequest, FightResult}, wasi::http::incoming_handler::Guest}, hti::superheroes::types::{Fighters, Hero, Location, Team, Villain}, wasi::logging::logging::{log, Level}};
+use bindings::{exports::wasi::http::incoming_handler::Guest, hti::superheroes::types::{FightRequest, FightResult, Fighters, Hero, Location, Team, Villain}, wasi::logging::logging::{log, Level}};
 use http::{get_random_hero, get_random_location, get_random_villain};
 use serde::Serialize;
 use wasi::{clocks::wall_clock, http::types::*};
@@ -10,7 +10,7 @@ mod http;
 pub mod bindings {
     wit_bindgen::generate!({ 
         world: "fight-api-world",
-        path: ["../../lib/bindings/wit/"],
+        path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
         pub_export_macro: true,
         with: {
@@ -31,27 +31,27 @@ pub mod bindings {
 
 struct FightService;
 
-impl bindings::exports::hti::superheroes::perform_fight::Guest for FightService {
+// impl bindings::exports::hti::superheroes::perform_fight::Guest for FightService {
 
-    #[allow(async_fn_in_trait)]
-    fn random_fighters() -> Fighters {
-        random_fighters()
-    }
+//     #[allow(async_fn_in_trait)]
+//     fn random_fighters() -> Fighters {
+//         random_fighters()
+//     }
 
-    #[allow(async_fn_in_trait)]
-    fn perform_fight(request:FightRequest) -> FightResult {
-        let hero = request.hero;
-        let villain = request.villain;
-        let location = request.location;
+//     #[allow(async_fn_in_trait)]
+//     fn perform_fight(request:FightRequest) -> FightResult {
+//         let hero = request.hero;
+//         let villain = request.villain;
+//         let location = request.location;
 
-        let now = wasi::clocks::wall_clock::now().seconds;
-        if hero.level > villain.level {
-            FightResult::new(Team::Heroes, &hero, &villain, &location, now)
-        } else {
-            FightResult::new(Team::Villains, &hero, &villain, &location,now)
-        }
-    }
-}
+//         let now = wasi::clocks::wall_clock::now().seconds;
+//         if hero.level > villain.level {
+//             FightResult::new(Team::Heroes, &hero, &villain, &location, now)
+//         } else {
+//             FightResult::new(Team::Villains, &hero, &villain, &location,now)
+//         }
+//     }
+// }
 
 bindings::export!(FightService with_types_in bindings);
 

@@ -202,17 +202,12 @@ spec:
     - name: rest-fights-over-http
       type: component
       properties:
-        # To use the locally compiled code in this folder, use the line below instead after running `wash build`:
-        # image: file://./build/dog_fetcher_s.wasm
         image: registry:5000/superheroes/rest-fights-over-http:0.1.0
       traits:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
             instances: 1
-        # Establish a unidirectional link to the `httpclient` provider,
-        # so the `http-component` (dog-fetching) component can make use of httpclient functionality
-        # (i.e. making external web requests)
         - type: link
           properties:
             target:
@@ -243,19 +238,36 @@ spec:
       properties:
         image: ghcr.io/wasmcloud/http-client:0.13.1
 
-
-
     - name: fights-rest
       type: component
       properties:
-        # To use the locally compiled code in this folder, use the line below instead after running `wash build`:
-        # image: file://./build/dog_fetcher_s.wasm
         image: registry:5000/superheroes/fights-rest:0.1.2
       traits:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
             instances: 1
+        - type: link
+          properties:
+            target: 
+              name: location-repository
+            namespace: hti
+            package: superheroes
+            interfaces: [location-repository]            
+        - type: link
+          properties:
+            target: 
+              name: hero-repository
+            namespace: hti
+            package: superheroes
+            interfaces: [hero-repository]
+        - type: link
+          properties:
+            target: 
+              name: villain-repository
+            namespace: hti
+            package: superheroes
+            interfaces: [villain-repository]
 
     - name: fights-rest-http
       type: capability

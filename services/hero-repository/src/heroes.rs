@@ -1,6 +1,4 @@
-// use bindings::{hti::superheroes::types::Hero, wasmcloud::postgres::types::ResultRowEntry};
 use serde::{Deserialize, Serialize};
-
 use crate::{bindings::hti::superheroes::types::Hero, types::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value}, bindings::wasmcloud::postgres::types::ResultRowEntry};
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -34,7 +32,6 @@ impl From<&Vec<ResultRowEntry>> for SqlHero {
         let mut other_name = None;
         let mut picture = String::new();
         let mut powers = String::new();
-
         for entry in row {
             match entry.column_name.as_str() {
                 "id" => id = get_i64_from_value(&entry.value),
@@ -46,7 +43,6 @@ impl From<&Vec<ResultRowEntry>> for SqlHero {
                 _ => panic!("unknown column: {} {:?}", entry.column_name, entry.value),
             }
         }
-
         SqlHero {
             id,
             level,

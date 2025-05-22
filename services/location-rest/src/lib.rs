@@ -7,7 +7,7 @@ use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, IncomingRequest
 pub mod bindings {
     wit_bindgen::generate!({ 
         world: "location-api-world",
-        path: ["../../lib/bindings/wit/"],
+        path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
         pub_export_macro: true,
         with: {
@@ -128,6 +128,6 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
                 ))
             }
         }
-        Err(e) => Err(format!("Got error when trying to fetch dog: {}", e)),
+        Err(e) => Err(format!("Error in outgoing request: host: {host} path: {path} error: {:?}", e)),
     }
 }

@@ -5,7 +5,7 @@ mod types;
 pub mod bindings {
     wit_bindgen::generate!({ 
         world: "villain-repository-world",
-        path: ["../../lib/bindings/wit/"],
+        path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
         pub_export_macro: true,
         with: {

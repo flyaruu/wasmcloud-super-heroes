@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use serde::{Deserialize, Serialize};
 
 use crate::{bindings::{hti::superheroes::types::{Location, LocationType}, wasi::logging::logging::{log, Level}, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i64_from_value, get_string_from_value}};
