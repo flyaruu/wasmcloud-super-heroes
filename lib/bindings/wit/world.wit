@@ -151,8 +151,19 @@ world fight-api-world {
   import wasi:logging/logging@0.1.0-draft;
   import wasi:http/outgoing-handler@0.2.4;
   import wasi:clocks/wall-clock@0.2.4;
-
 }
+
+world rest-fight {
+  use types.{hero,villain,location,fight-result,fight-request};
+  export perform-fight;
+  export wasi:http/incoming-handler@0.2.4;
+  import wasi:logging/logging@0.1.0-draft;
+  import wasi:clocks/wall-clock@0.2.4;
+  import hero-repository;
+  import villain-repository;
+  import location-repository;
+}
+
 
 world superhero {
   include base;

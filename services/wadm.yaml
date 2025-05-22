@@ -242,3 +242,35 @@ spec:
       type: capability
       properties:
         image: ghcr.io/wasmcloud/http-client:0.13.1
+
+
+
+    - name: fights-rest
+      type: component
+      properties:
+        # To use the locally compiled code in this folder, use the line below instead after running `wash build`:
+        # image: file://./build/dog_fetcher_s.wasm
+        image: registry:5000/superheroes/fights-rest:0.1.2
+      traits:
+        # Govern the spread/scheduling of the component
+        - type: spreadscaler
+          properties:
+            instances: 1
+
+    - name: fights-rest-http
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/http-server:0.27.0
+      traits:
+        - type: link
+          properties:
+            target:
+              name: fights-rest
+            namespace: wasi
+            package: http
+            interfaces: [incoming-handler]
+            source:
+              config:
+                - name: fights-rest
+                  properties:
+                    address: 0.0.0.0:8005

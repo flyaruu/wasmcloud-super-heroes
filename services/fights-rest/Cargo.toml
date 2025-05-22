@@ -1,0 +1,14 @@
+[package]
+name = "fights-rest"
+edition = "2021"
+version = "0.1.2"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = { workspace = true}
+serde_json = { workspace = true }
+wasi = { workspace = true }
+wit-bindgen = { workspace = true }
+uuid = { workspace = true}
