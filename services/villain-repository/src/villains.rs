@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{bindings::{hti::superheroes::types::Villain, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value}};
+use crate::{
+    bindings::{hti::superheroes::types::Villain, wasmcloud::postgres::types::ResultRowEntry},
+    types::{
+        get_i32_from_value, get_i64_from_value, get_optional_string_from_value,
+        get_string_from_value,
+    },
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]

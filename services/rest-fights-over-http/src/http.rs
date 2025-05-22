@@ -1,9 +1,15 @@
 use std::io::Read;
 
 use serde::de::DeserializeOwned;
-use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, OutgoingRequest, Scheme}};
+use wasi::http::{
+    outgoing_handler,
+    types::{Fields, IncomingBody, OutgoingRequest, Scheme},
+};
 
-use crate::bindings::{hti::superheroes::types::{Hero, Location, Villain}, wasi::logging::logging::{log, Level}};
+use crate::bindings::{
+    hti::superheroes::types::{Hero, Location, Villain},
+    wasi::logging::logging::{log, Level},
+};
 
 pub(crate) fn get_random_hero() -> Result<Hero, String> {
     get_item::<Hero>("wasmcloud:8001", "/api/heroes/random_hero")
@@ -63,6 +69,9 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
                 ))
             }
         }
-        Err(e) => Err(format!("Error in outgoing request: host: {host} path: {path} error: {:?}", e)),
+        Err(e) => Err(format!(
+            "Error in outgoing request: host: {host} path: {path} error: {:?}",
+            e
+        )),
     }
 }

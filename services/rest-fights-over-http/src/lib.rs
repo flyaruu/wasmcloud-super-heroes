@@ -1,14 +1,17 @@
 use std::io::Read;
 
-
-use bindings::{exports::wasi::http::incoming_handler::Guest, hti::superheroes::types::{FightRequest, FightResult, Fighters, Hero, Location, Team, Villain}, wasi::logging::logging::{log, Level}};
+use bindings::{
+    exports::wasi::http::incoming_handler::Guest,
+    hti::superheroes::types::{FightRequest, FightResult, Fighters, Hero, Location, Team, Villain},
+    wasi::logging::logging::{log, Level},
+};
 use http::{get_random_hero, get_random_location, get_random_villain};
 use serde::Serialize;
 use wasi::{clocks::wall_clock, http::types::*};
 
 mod http;
 pub mod bindings {
-    wit_bindgen::generate!({ 
+    wit_bindgen::generate!({
         world: "fight-api-world",
         path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
@@ -26,8 +29,6 @@ pub mod bindings {
         },
     });
 }
-
-
 
 struct FightService;
 
@@ -57,14 +58,23 @@ bindings::export!(FightService with_types_in bindings);
 
 impl Guest for FightService {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
-        log(Level::Info, "Fight request", format!("Request: {:?} == {:?}", request.method(), request.path_with_query()).as_str());
+        log(
+            Level::Info,
+            "Fight request",
+            format!(
+                "Request: {:?} == {:?}",
+                request.method(),
+                request.path_with_query()
+            )
+            .as_str(),
+        );
         if let Some(path) = request.path_with_query() {
             match (request.method(), path.as_str()) {
                 (Method::Get, "/api/fights/randomfighters") => {
                     let fighters = random_fighters();
                     write_output(response_out, &fighters);
                     return;
-                },
+                }
                 (Method::Get, "/api/fights/randomlocation") => {
                     let location = get_random_location();
                     match location {
@@ -73,10 +83,10 @@ impl Guest for FightService {
                             let error_msg = format!("Error: {}", e);
                             log(Level::Error, "request", &error_msg);
                             write_status_message(response_out, error_msg, 500);
-                        },
+                        }
                     }
                     return;
-                },
+                }
                 (Method::Get, "/api/fights/randomfight") => {
                     let fight_result = execute_random_fight();
                     match fight_result {
@@ -85,10 +95,10 @@ impl Guest for FightService {
                             let error_msg = format!("Error: {}", e);
                             log(Level::Error, "request", &error_msg);
                             write_status_message(response_out, error_msg, 500);
-                        },
+                        }
                     }
-                },
-                (Method::Post,"/api/fights") => {
+                }
+                (Method::Post, "/api/fights") => {
                     let input_stream = request.consume().unwrap();
                     let mut reader = input_stream.stream().unwrap();
                     let mut buf = Vec::new();
@@ -98,15 +108,16 @@ impl Guest for FightService {
                         &fight_request.hero,
                         &fight_request.villain,
                         &fight_request.location,
-                    ).unwrap();
+                    )
+                    .unwrap();
                     write_output(response_out, &result);
                     return;
-                },
+                }
                 _ => {
                     log(Level::Error, "request", "Invalid request");
                     write_status_message(response_out, "Invalid request".to_owned(), 404);
                     return;
-                }                
+                }
             }
         } else {
             log(Level::Error, "request", "Path not found");
@@ -116,23 +127,28 @@ impl Guest for FightService {
     }
 }
 
-fn random_fighters()->Fighters {
+fn random_fighters() -> Fighters {
     // bindings::hti::superheroes::types::Fighters;
     let hero = get_random_hero().unwrap();
     let villain = get_random_villain().unwrap();
     Fighters { hero, villain }
 }
 
-fn execute_fight(hero: &Hero, villain: &Villain, location: &Location) -> Result<FightResult, String> {
+fn execute_fight(
+    hero: &Hero,
+    villain: &Villain,
+    location: &Location,
+) -> Result<FightResult, String> {
     let timestamp = wasi::clocks::wall_clock::now().seconds;
     let winner = if hero.level > villain.level {
         Team::Heroes
     } else {
         Team::Villains
     };
-    Ok(FightResult::new(winner, &hero, &villain, &location, timestamp))
+    Ok(FightResult::new(
+        winner, &hero, &villain, &location, timestamp,
+    ))
 }
-
 
 fn execute_random_fight() -> Result<FightResult, String> {
     let hero = get_random_hero()?;
@@ -147,10 +163,7 @@ fn execute_random_fight() -> Result<FightResult, String> {
     Ok(FightResult::new(winner, &hero, &villain, &location, now))
 }
 
-
-
 // Outgoing http version
-
 
 pub fn write_status_message(response_out: ResponseOutparam, message: String, status_code: u16) {
     let response = OutgoingResponse::new(Fields::new());
@@ -180,7 +193,6 @@ pub fn write_output<S: Serialize>(response_out: ResponseOutparam, serializable: 
     drop(write_stream);
     OutgoingBody::finish(response_body, None).expect("failed to finish response body");
 }
-
 
 impl FightResult {
     pub fn new(

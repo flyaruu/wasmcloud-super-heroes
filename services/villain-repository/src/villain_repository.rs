@@ -1,14 +1,19 @@
-use crate::{bindings::{exports::hti::superheroes::villain_repository::Guest, hti::superheroes::types::Villain, wasmcloud::postgres::query::{query, PgValue}}, villains::SqlVillain};
-
-
+use crate::{
+    bindings::{
+        exports::hti::superheroes::villain_repository::Guest,
+        hti::superheroes::types::Villain,
+        wasmcloud::postgres::query::{query, PgValue},
+    },
+    villains::SqlVillain,
+};
 
 struct VillainRepository;
 
-
 impl Guest for VillainRepository {
-    fn get_villain(id:i64,) -> Option<Villain> {
+    fn get_villain(id: i64) -> Option<Villain> {
         let rows = query("select * from Villain where id = $1", &[PgValue::Int8(id)]).unwrap();
-        rows.first().map(|row| row.into())
+        rows.first()
+            .map(|row| row.into())
             .map(|villain: SqlVillain| villain.into())
     }
 
@@ -18,9 +23,10 @@ impl Guest for VillainRepository {
         villain.into()
     }
 
-    fn get_all_villains() -> Vec::<Villain> {
+    fn get_all_villains() -> Vec<Villain> {
         let rows = query("select * from Villain", &[]).unwrap();
-        rows.iter().map(|row| row.into())
+        rows.iter()
+            .map(|row| row.into())
             .map(|villain: SqlVillain| villain.into())
             .collect()
     }

@@ -1,9 +1,9 @@
+mod types;
 mod villain_repository;
 mod villains;
-mod types;
 
 pub mod bindings {
-    wit_bindgen::generate!({ 
+    wit_bindgen::generate!({
         world: "villain-repository-world",
         path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],

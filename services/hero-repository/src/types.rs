@@ -1,5 +1,5 @@
-use std::str::from_utf8;
 use crate::bindings::wasmcloud::postgres::query::PgValue;
+use std::str::from_utf8;
 
 pub fn get_string_from_value(value: &PgValue) -> String {
     match value {

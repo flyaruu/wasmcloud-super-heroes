@@ -1,5 +1,12 @@
+use crate::{
+    bindings::hti::superheroes::types::Hero,
+    bindings::wasmcloud::postgres::types::ResultRowEntry,
+    types::{
+        get_i32_from_value, get_i64_from_value, get_optional_string_from_value,
+        get_string_from_value,
+    },
+};
 use serde::{Deserialize, Serialize};
-use crate::{bindings::hti::superheroes::types::Hero, types::{get_i32_from_value, get_i64_from_value, get_optional_string_from_value, get_string_from_value}, bindings::wasmcloud::postgres::types::ResultRowEntry};
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SqlHero {

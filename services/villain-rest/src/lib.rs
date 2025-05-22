@@ -1,11 +1,21 @@
 use std::io::Read;
 
-use bindings::{exports::wasi::http::incoming_handler::Guest, hti::superheroes::villain_repository::{get_all_villains, get_random_villain, get_villain}, wasi::logging::logging::{log, Level}};
-use serde::{de::DeserializeOwned, Serialize};
-use wasi::http::{outgoing_handler, types::{Fields, IncomingBody, IncomingRequest, OutgoingBody, OutgoingRequest, OutgoingResponse, ResponseOutparam, Scheme}};
+use bindings::{
+    exports::wasi::http::incoming_handler::Guest,
+    hti::superheroes::villain_repository::{get_all_villains, get_random_villain, get_villain},
+    wasi::logging::logging::{Level, log},
+};
+use serde::{Serialize, de::DeserializeOwned};
+use wasi::http::{
+    outgoing_handler,
+    types::{
+        Fields, IncomingBody, IncomingRequest, OutgoingBody, OutgoingRequest, OutgoingResponse,
+        ResponseOutparam, Scheme,
+    },
+};
 
 pub mod bindings {
-    wit_bindgen::generate!({ 
+    wit_bindgen::generate!({
         world: "villain-api-world",
         path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
@@ -128,6 +138,9 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
                 ))
             }
         }
-        Err(e) => Err(format!("Error in outgoing request: host: {host} path: {path} error: {:?}", e)),
+        Err(e) => Err(format!(
+            "Error in outgoing request: host: {host} path: {path} error: {:?}",
+            e
+        )),
     }
 }
