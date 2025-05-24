@@ -1,11 +1,15 @@
 #!/bin/sh
-wash start provider ghcr.io/wasmcloud/sqldb-postgres:0.9.0 postgres-provider
-set -e
+WASMCLOUD_NATS_HOST=${WASMCLOUD_NATS_HOST:-"localhost"}
 
+wash start provider --ctl-host ${WASMCLOUD_NATS_HOST} ghcr.io/wasmcloud/sqldb-postgres:0.9.0 postgres-provider
+
+set -e
+cargo build --release
 for dir in services/*/; do
   if [ -x "$dir/deploy.sh" ]; then
-    (cd "$dir" && ./deploy.sh)
+    echo "Deploying service in $dir"
+    (cd "$dir" && ./deploy.sh ${WASM_REGISTRY_BASE_URL})
   fi
 done
-
-wash app deploy --replace ./services/wadm.yaml
+echo "Deploying wadm to host ${WASMCLOUD_NATS_HOST}"
+wash app deploy --ctl-host ${WASMCLOUD_NATS_HOST} --replace ./services/wadm.yaml

@@ -13,7 +13,10 @@ export function randomFight() {
     check(response, {
         'random fighters status is 200': (r) => r.status === 200,
     });
-    var response_body = JSON.parse(response.body);
+    var body = response.body;
+        // console.log(body);
+
+    var response_body = JSON.parse(body);
 
     var hero = response_body.hero;
     var villain = response_body.villain;

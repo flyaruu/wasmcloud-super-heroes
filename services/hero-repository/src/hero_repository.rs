@@ -2,7 +2,6 @@ use crate::{
     bindings::{
         exports::hti::superheroes::hero_repository::Guest,
         hti::superheroes::types::Hero,
-        wasi::logging::logging::{log, Level},
         wasmcloud::postgres::query::{query, PgValue},
     },
     heroes::SqlHero,
@@ -12,7 +11,6 @@ struct HeroRepository;
 
 impl Guest for HeroRepository {
     fn get_hero(id: i64) -> Option<Hero> {
-        log(Level::Info, "", "Getting hero!");
         let rows = query("select * from Hero where id = $1", &[PgValue::Int8(id)]).unwrap();
         rows.first()
             .map(|row| row.into())

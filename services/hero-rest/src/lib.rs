@@ -3,7 +3,6 @@ use std::io::Read;
 use bindings::{
     exports::wasi::http::incoming_handler::Guest,
     hti::superheroes::hero_repository::{get_all_heroes, get_hero, get_random_hero},
-    wasi::logging::logging::{Level, log},
 };
 use serde::{Serialize, de::DeserializeOwned};
 use wasi::http::{
@@ -100,12 +99,6 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
     req.set_scheme(Some(&Scheme::Http)).unwrap();
     req.set_authority(Some(host)).unwrap();
     req.set_path_with_query(Some(path)).unwrap();
-
-    log(
-        Level::Info,
-        "request",
-        &format!("Creating outgoing request2: {:?}", req),
-    );
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
             resp.subscribe().block();

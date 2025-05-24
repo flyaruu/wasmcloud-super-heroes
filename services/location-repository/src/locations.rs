@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{bindings::{hti::superheroes::types::{Location, LocationType}, wasi::logging::logging::{log, Level}, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i64_from_value, get_string_from_value}};
+use crate::{bindings::{hti::superheroes::types::{Location, LocationType}, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i64_from_value, get_string_from_value}};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub enum SqlLocationType {
@@ -65,7 +65,6 @@ impl From<&Vec<ResultRowEntry>> for SqlLocation {
         let mut r#type = String::new();
 
         for entry in row {
-            log(Level::Info, "", &format!("Name: {} = {:?}", entry.column_name, entry.value));
             match entry.column_name.as_str() {
                 "id" => id = get_i64_from_value(&entry.value),
                 // "level" => level = get_i32_from_value(&entry.value),

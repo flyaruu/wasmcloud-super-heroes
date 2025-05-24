@@ -60,16 +60,16 @@ bindings::export!(FightService with_types_in bindings);
 
 impl Guest for FightService {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
-        log(
-            Level::Info,
-            "Fight request",
-            format!(
-                "Request: {:?} == {:?}",
-                request.method(),
-                request.path_with_query()
-            )
-            .as_str(),
-        );
+        // log(
+        //     Level::Info,
+        //     "Fight request",
+        //     format!(
+        //         "Request: {:?} == {:?}",
+        //         request.method(),
+        //         request.path_with_query()
+        //     )
+        //     .as_str(),
+        // );
         if let Some(path) = request.path_with_query() {
             match (request.method(), path.as_str()) {
                 (Method::Get, "/api/fights/randomfighters") => {

@@ -118,6 +118,21 @@ services:
     build:
       context: ./builder
     container_name: builder
-    command: sleep infinity
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      /build/deploy_all.sh
     volumes:
       - ${PWD}:/build
+    working_dir: /build
+    environment:
+      - WASM_REGISTRY_BASE_URL=registry:5000/superheroes
+      - WASMCLOUD_NATS_HOST=nats
+      - WASMCLOUD_NATS_PORT=4222
+
+    depends_on:
+      - registry
+      - heroes-db
+      - villains-db
+      - locations-db
+      - wasmcloud
+      - wadm

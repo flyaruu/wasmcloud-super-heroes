@@ -1,4 +1,4 @@
-name = "location-rest"
+name = "location_rest"
 version = "0.1.0"
 language = "rust"
 type = "component"

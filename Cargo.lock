@@ -231,7 +231,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "location-rest"
+name = "location_rest"
 version = "0.1.0"
 dependencies = [
  "serde",

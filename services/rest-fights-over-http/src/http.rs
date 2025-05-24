@@ -6,10 +6,7 @@ use wasi::http::{
     types::{Fields, IncomingBody, OutgoingRequest, Scheme},
 };
 
-use crate::bindings::{
-    hti::superheroes::types::{Hero, Location, Villain},
-    wasi::logging::logging::{log, Level},
-};
+use crate::bindings::hti::superheroes::types::{Hero, Location, Villain};
 
 pub(crate) fn get_random_hero() -> Result<Hero, String> {
     get_item::<Hero>("wasmcloud:8001", "/api/heroes/random_hero")
@@ -32,12 +29,6 @@ pub fn get_bytes(host: &str, path: &str) -> Result<Vec<u8>, String> {
     req.set_scheme(Some(&Scheme::Http)).unwrap();
     req.set_authority(Some(host)).unwrap();
     req.set_path_with_query(Some(path)).unwrap();
-
-    log(
-        Level::Info,
-        "request",
-        &format!("Creating outgoing request2: {:?}", req),
-    );
     match outgoing_handler::handle(req, None) {
         Ok(resp) => {
             resp.subscribe().block();
