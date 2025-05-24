@@ -6,6 +6,7 @@ on:
     branches: 
       - main
       - docker-compose-build
+      - components
 env:
   ARCHITECTURE: amd64
   K6_VERSION: "0.58.0"
