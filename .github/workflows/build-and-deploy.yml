@@ -59,7 +59,7 @@ jobs:
       - name: Cardamon All
         run: |
           export LOG_FILTER=info
-          export K6_HOST=wasmcloud
+          export K6_HOST=http://wasmcloud
           cardamon run microservice
           cardamon run component
       - name: Cardamon Stats
