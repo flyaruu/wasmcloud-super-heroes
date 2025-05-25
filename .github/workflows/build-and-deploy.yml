@@ -58,10 +58,12 @@ jobs:
           docker compose up --force-recreate -d
       - name: Cardamon All
         run: |
-          export LOG_FILTER=warn
+          export LOG_FILTER=info
           export K6_HOST=wasmcloud
           cardamon run microservice
           cardamon run component
+          pwd
+          ls -la
       - name: Cardamon Stats
         run: |
           mkdir -p perf_data
