@@ -19,28 +19,28 @@ startup_grace = "10s"
 [[scenario]]
 name = "200_microservice"
 desc = "High load test. 200 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=200 -e K6_HOST=${K6_HOST}:8004  k6/load.js --summary-export perf_data/k6_200.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=200 -e K6_HOST=wasmcloud:8004  k6/load.js --summary-export perf_data/k6_200.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "100_microservice"
 desc = "Load test. 100 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=${K6_HOST}:8004 k6/load.js --summary-export perf_data/k6_100.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=wasmcloud:8004 k6/load.js --summary-export perf_data/k6_100.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "1_microservice"
 desc = "No load test. 1 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=1 -e K6_HOST=${K6_HOST}:8004 k6/load.js  --summary-export perf_data/k6_1.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=1 -e K6_HOST=wasmcloud:8004 k6/load.js  --summary-export perf_data/k6_1.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "10_microservice"
 desc = "Low load test, 10 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=10 -e K6_HOST=${K6_HOST}:8004 k6/load.js --summary-export perf_data/k6_10.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=10 -e K6_HOST=wasmcloud:8004 k6/load.js --summary-export perf_data/k6_10.json"
 iterations = 1
 processes = ["superheroes"]
 
@@ -48,28 +48,28 @@ processes = ["superheroes"]
 [[scenario]]
 name = "200_component"
 desc = "High load test. 200 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=200 -e K6_HOST=${K6_HOST}:8005 k6/load.js --summary-export perf_data/k6_200.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=200 -e K6_HOST=wasmcloud:8005 k6/load.js --summary-export perf_data/k6_200.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "100_component"
 desc = "Load test. 100 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=${K6_HOST}:8005 k6/load.js --summary-export perf_data/k6_100.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=wasmcloud:8005 k6/load.js --summary-export perf_data/k6_100.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "1_component"
 desc = "No load test. 1 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=1 -e K6_HOST=${K6_HOST}:8005 k6/load.js  --summary-export perf_data/k6_1.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=1 -e K6_HOST=wasmcloud:8005 k6/load.js  --summary-export perf_data/k6_1.json"
 iterations = 1
 processes = ["superheroes"]
 
 [[scenario]]
 name = "10_component"
 desc = "Low load test, 10 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=10 -e K6_HOST=${K6_HOST}:8005 k6/load.js --summary-export perf_data/k6_10.json"
+command = "k6 run --log-output stdout -e RAMPING_RATE=10 -e K6_HOST=wasmcloud:8005 k6/load.js --summary-export perf_data/k6_10.json"
 iterations = 1
 processes = ["superheroes"]
 
