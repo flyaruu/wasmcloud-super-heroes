@@ -76,11 +76,11 @@ processes = ["superheroes"]
 
 [[observation]]
 name = "microservice"
-scenarios = ["1_microservice", "10_microservice", "100_microservice", "200_microservice"]
+scenarios = ["1_microservice", "10_microservice", "100_microservice"]
 
 [[observation]]
 name = "component"
-scenarios = ["1_component", "10_component", "100_component", "200_component"]
+scenarios = ["1_component", "10_component", "100_component"]
 
 [[observation]]
 name = "microservice_high"
