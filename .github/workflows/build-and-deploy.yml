@@ -62,13 +62,12 @@ jobs:
           export K6_HOST=wasmcloud
           cardamon run microservice
           cardamon run component
-          pwd
-          ls -la
       - name: Cardamon Stats
         run: |
-          mkdir -p perf_data
+          pwd
+          ls -la
           cardamon stats >perf_data/stats.txt
-          cat stats.txt
+          cat perf_data/stats.txt
 
       - uses: actions/upload-artifact@v4
         with:
