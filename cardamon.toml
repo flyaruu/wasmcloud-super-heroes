@@ -23,8 +23,6 @@ command = "k6 run --log-output stderr -e RAMPING_RATE=200 -e K6_HOST=$K6_HOST:80
 iterations = 1
 processes = ["superheroes"]
 
---log-output stderr
-
 [[scenario]]
 name = "100_microservice"
 desc = "Load test. 100 r/s."
