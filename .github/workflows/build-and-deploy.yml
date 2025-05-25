@@ -58,6 +58,9 @@ jobs:
           docker compose up --force-recreate -d
       - name: Cardamon All
         run: |
+          curl -v http://wasmcloud:8004/api/fights/randomfighters
+      - name: Cardamon All
+        run: |
           export LOG_FILTER=info
           export K6_HOST=http://wasmcloud
           cardamon run microservice

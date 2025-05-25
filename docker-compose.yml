@@ -20,7 +20,6 @@ services:
 
   wasmcloud:
     image: wasmcloud/wasmcloud:latest
-    container_name: wasmcloud_host
     depends_on:
       nats:
         condition: service_healthy
