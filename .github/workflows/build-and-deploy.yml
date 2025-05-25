@@ -64,6 +64,7 @@ jobs:
           cardamon run component
       - name: Cardamon Stats
         run: |
+          mkdir -p perf_data
           cardamon stats >perf_data/stats.txt
           cat stats.txt
 
