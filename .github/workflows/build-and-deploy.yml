@@ -58,6 +58,7 @@ jobs:
           docker compose up --force-recreate -d
       - name: Cardamon All
         run: |
+          sleep 60
           curl -v http://localhost:8004/api/fights/randomfighters
       - name: Cardamon All
         run: |
