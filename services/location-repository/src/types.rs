@@ -1,5 +1,5 @@
+use crate::bindings::wasmcloud::postgres::query::PgValue;
 use std::str::from_utf8;
-use crate::bindings::wasmcloud::postgres::{query::PgValue};
 
 pub fn get_string_from_value(value: &PgValue) -> String {
     match value {
@@ -8,7 +8,6 @@ pub fn get_string_from_value(value: &PgValue) -> String {
         _ => panic!("Invalid type: {:?}", value),
     }
 }
-
 
 pub fn get_i64_from_value(value: &PgValue) -> i64 {
     match value {

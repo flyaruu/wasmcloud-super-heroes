@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{bindings::{hti::superheroes::types::{Location, LocationType}, wasmcloud::postgres::types::ResultRowEntry}, types::{get_i64_from_value, get_string_from_value}};
+use crate::{
+    bindings::{
+        hti::superheroes::types::{Location, LocationType},
+        wasmcloud::postgres::types::ResultRowEntry,
+    },
+    types::{get_i64_from_value, get_string_from_value},
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub enum SqlLocationType {
@@ -25,7 +31,7 @@ pub struct SqlLocation {
 
 impl TryFrom<&str> for SqlLocationType {
     type Error = String;
-    
+
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
             "CITY" => Ok(Self::CITY),
@@ -34,9 +40,8 @@ impl TryFrom<&str> for SqlLocationType {
             "ISLAND" => Ok(Self::ISLAND),
             "COUNTRY" => Ok(Self::COUNTRY),
             "MOON" => Ok(Self::MOON),
-            _ => Err(format!("Unexpected type: {}",value))
+            _ => Err(format!("Unexpected type: {}", value)),
         }
-
     }
 }
 
@@ -53,8 +58,6 @@ impl Into<LocationType> for SqlLocationType {
         }
     }
 }
-
-// [CITY, PLANET, PLACE, ISLAND, COUNTRY, MOON]
 
 impl From<&Vec<ResultRowEntry>> for SqlLocation {
     fn from(row: &Vec<ResultRowEntry>) -> Self {

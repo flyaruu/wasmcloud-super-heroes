@@ -3,7 +3,7 @@ mod locations;
 mod types;
 
 pub mod bindings {
-    wit_bindgen::generate!({ 
+    wit_bindgen::generate!({
         world: "location-repository-world",
         path: ["../../wit/"],
         additional_derives: [serde::Serialize, serde::Deserialize],
