@@ -20,15 +20,15 @@ pub struct SqlVillain {
     pub powers: String,
 }
 
-impl Into<Villain> for SqlVillain {
-    fn into(self) -> Villain {
+impl From<SqlVillain> for Villain {
+    fn from(val: SqlVillain) -> Self {
         Villain {
-            id: self.id,
-            level: self.level,
-            name: self.name,
-            other_name: self.other_name,
-            picture: self.picture,
-            powers: self.powers,
+            id: val.id,
+            level: val.level,
+            name: val.name,
+            other_name: val.other_name,
+            picture: val.picture,
+            powers: val.powers,
         }
     }
 }

@@ -63,7 +63,6 @@ impl Guest for FightService {
                 (Method::Get, "/api/fights/randomfighters") => {
                     let fighters = random_fighters();
                     write_output(response_out, &fighters);
-                    return;
                 }
                 (Method::Get, "/api/fights/randomlocation") => {
                     let location = get_random_location();
@@ -75,7 +74,6 @@ impl Guest for FightService {
                             write_status_message(response_out, error_msg, 500);
                         }
                     }
-                    return;
                 }
                 (Method::Get, "/api/fights/randomfight") => {
                     let fight_result = execute_random_fight();
@@ -101,18 +99,15 @@ impl Guest for FightService {
                     )
                     .unwrap();
                     write_output(response_out, &result);
-                    return;
                 }
                 _ => {
                     log(Level::Error, "request", "Invalid request");
                     write_status_message(response_out, "Invalid request".to_owned(), 404);
-                    return;
                 }
             }
         } else {
             log(Level::Error, "request", "Path not found");
             write_status_message(response_out, "Path not found".to_owned(), 400);
-            return;
         }
     }
 }
@@ -136,7 +131,7 @@ fn execute_fight(
         Team::Villains
     };
     Ok(FightResult::new(
-        winner, &hero, &villain, &location, timestamp,
+        winner, hero, villain, location, timestamp,
     ))
 }
 
@@ -240,8 +235,8 @@ impl FightResult {
             loser_level,
             loser_powers,
             loser_picture,
-            winner_team: winner_team,
-            loser_team: loser_team,
+            winner_team,
+            loser_team,
             location: location.clone(),
         }
     }

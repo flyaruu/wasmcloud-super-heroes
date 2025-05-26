@@ -18,15 +18,15 @@ pub struct SqlHero {
     pub powers: String,
 }
 
-impl Into<Hero> for SqlHero {
-    fn into(self) -> Hero {
+impl From<SqlHero> for Hero {
+    fn from(val: SqlHero) -> Self {
         Hero {
-            id: self.id,
-            level: self.level,
-            name: self.name,
-            other_name: self.other_name,
-            picture: self.picture,
-            powers: self.powers,
+            id: val.id,
+            level: val.level,
+            name: val.name,
+            other_name: val.other_name,
+            picture: val.picture,
+            powers: val.powers,
         }
     }
 }

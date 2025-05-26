@@ -36,13 +36,13 @@ impl Guest for HeroFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
         if let Some(path) = request.path_with_query() {
             if path.starts_with("/api/heroes/random_hero") {
-                write_output(response_out, &get_random_hero());
+                write_output(response_out, get_random_hero());
                 return;
             }
             if path.starts_with("/api/heroes/") {
                 let id: String = path.chars().skip("/api/heroes/".len()).collect();
                 match id.parse::<i64>() {
-                    Ok(id) => write_output(response_out, &get_hero(id)),
+                    Ok(id) => write_output(response_out, get_hero(id)),
                     Err(e) => {
                         write_status_message(response_out, format!("Invalid id: {}", e), 400);
                     }
@@ -50,7 +50,7 @@ impl Guest for HeroFetcher {
                 return;
             }
             if path.starts_with("/api/heroes") {
-                write_output(response_out, &get_all_heroes());
+                write_output(response_out, get_all_heroes());
                 return;
             }
             write_status_message(response_out, format!("Path not found: {}", path), 404);

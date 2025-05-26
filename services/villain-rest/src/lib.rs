@@ -36,13 +36,13 @@ impl Guest for VillainFetcher {
     fn handle(request: IncomingRequest, response_out: ResponseOutparam) {
         if let Some(path) = request.path_with_query() {
             if path.starts_with("/api/villains/random_villain") {
-                write_output(response_out, &get_random_villain());
+                write_output(response_out, get_random_villain());
                 return;
             }
             if path.starts_with("/api/villains/") {
                 let id: String = path.chars().skip("/api/villains/".len()).collect();
                 match id.parse::<i64>() {
-                    Ok(id) => write_output(response_out, &get_villain(id)),
+                    Ok(id) => write_output(response_out, get_villain(id)),
                     Err(e) => {
                         write_status_message(response_out, format!("Invalid id: {}", e), 400);
                     }
@@ -50,7 +50,7 @@ impl Guest for VillainFetcher {
                 return;
             }
             if path.starts_with("/api/villains") {
-                write_output(response_out, &get_all_villains());
+                write_output(response_out, get_all_villains());
                 return;
             }
             write_status_message(response_out, format!("Path not found: {}", path), 404);

@@ -45,9 +45,9 @@ impl TryFrom<&str> for SqlLocationType {
     }
 }
 
-impl Into<LocationType> for SqlLocationType {
-    fn into(self) -> LocationType {
-        match self {
+impl From<SqlLocationType> for LocationType {
+    fn from(val: SqlLocationType) -> Self {
+        match val {
             SqlLocationType::NONE => panic!("Missing location type 'NONE'"),
             SqlLocationType::CITY => LocationType::City,
             SqlLocationType::PLANET => LocationType::Planet,
@@ -90,14 +90,14 @@ impl From<&Vec<ResultRowEntry>> for SqlLocation {
     }
 }
 
-impl Into<Location> for SqlLocation {
-    fn into(self) -> Location {
+impl From<SqlLocation> for Location {
+    fn from(val: SqlLocation) -> Self {
         Location {
-            id: self.id,
-            name: self.name,
-            description: self.description,
-            picture: self.picture,
-            type_: self.r#type.into(),
+            id: val.id,
+            name: val.name,
+            description: val.description,
+            picture: val.picture,
+            type_: val.r#type.into(),
         }
     }
 }
