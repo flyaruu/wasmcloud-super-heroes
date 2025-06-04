@@ -24,9 +24,24 @@ iterations = 3
 processes = ["superheroes"]
 
 [[scenario]]
-name = "80_microservice"
-desc = "Load test. 80 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=80 -e K6_HOST=http://localhost:8004 k6/load.js --summary-export perf_data/k6_80.json"
+name = "100_microservice"
+desc = "High load test. 100 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=http://localhost:8004  k6/load.js --summary-export perf_data/k6_100.json"
+iterations = 3
+processes = ["superheroes"]
+
+[[scenario]]
+name = "50_microservice"
+desc = "Load test. 50 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=50 -e K6_HOST=http://localhost:8004 k6/load.js --summary-export perf_data/k6_50.json"
+iterations = 3
+processes = ["superheroes"]
+
+
+[[scenario]]
+name = "75_microservice"
+desc = "Load test. 75 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=75 -e K6_HOST=http://localhost:8004 k6/load.js --summary-export perf_data/k6_75.json"
 iterations = 3
 processes = ["superheroes"]
 
@@ -53,11 +68,27 @@ iterations = 3
 processes = ["superheroes"]
 
 [[scenario]]
-name = "80_component"
-desc = "Load test. 80 r/s."
-command = "k6 run --log-output stdout -e RAMPING_RATE=80 -e K6_HOST=http://localhost:8005 k6/load.js --summary-export perf_data/k6_80.json"
+name = "100_component"
+desc = "High load test. 100 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=100 -e K6_HOST=http://localhost:8005 k6/load.js --summary-export perf_data/k6_100.json"
 iterations = 3
 processes = ["superheroes"]
+
+
+[[scenario]]
+name = "50_component"
+desc = "Load test. 50 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=50 -e K6_HOST=http://localhost:8005 k6/load.js --summary-export perf_data/k6_50.json"
+iterations = 3
+processes = ["superheroes"]
+
+[[scenario]]
+name = "75_component"
+desc = "Load test. 75 r/s."
+command = "k6 run --log-output stdout -e RAMPING_RATE=75 -e K6_HOST=http://localhost:8005 k6/load.js --summary-export perf_data/k6_75.json"
+iterations = 3
+processes = ["superheroes"]
+
 
 [[scenario]]
 name = "1_component"
@@ -76,11 +107,11 @@ processes = ["superheroes"]
 
 [[observation]]
 name = "microservice"
-scenarios = ["1_microservice", "10_microservice", "80_microservice"]
+scenarios = ["1_microservice", "10_microservice", "50_microservice", "75_microservice", "100_microservice"]
 
 [[observation]]
 name = "component"
-scenarios = ["1_component", "10_component", "80_component"]
-
+scenarios = ["1_component", "10_component", "50_component", "75_component", "100_component"]
+#scenarios = ["1", "10", "50", "75", "100"]
 
 

@@ -16,7 +16,7 @@ spec:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target: 
@@ -86,7 +86,7 @@ spec:
       traits:
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target:
@@ -115,7 +115,7 @@ spec:
       traits:
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target:
@@ -144,7 +144,7 @@ spec:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target: 
@@ -160,7 +160,7 @@ spec:
       traits:
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target:
@@ -189,7 +189,7 @@ spec:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target: 
@@ -207,7 +207,7 @@ spec:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target:
@@ -246,7 +246,7 @@ spec:
         # Govern the spread/scheduling of the component
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 5
         - type: link
           properties:
             target: 
